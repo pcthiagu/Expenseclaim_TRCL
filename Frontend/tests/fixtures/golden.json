@@ -1,0 +1,4734 @@
+{
+ "note": "Golden values captured from the original prototype (js/store.js, js/data.js) with the clock fixed at 2026-10-15T10:00. Used by tests/golden.calc.test.ts.",
+ "clock": "2026-10-15T10:00:00",
+ "records": {
+  "seed-1": {
+   "amount": 378,
+   "approved": 378,
+   "claimTotal": 378,
+   "claimApproved": 378
+  },
+  "seed-3": {
+   "amount": 6000,
+   "approved": 5200,
+   "claimTotal": 6000,
+   "claimApproved": 5200
+  },
+  "seed-6": {
+   "amount": 650,
+   "approved": 0,
+   "claimTotal": 650,
+   "claimApproved": 0
+  },
+  "seed-8": {
+   "amount": 530,
+   "approved": 530,
+   "claimTotal": 530,
+   "claimApproved": 530
+  },
+  "seed-11": {
+   "amount": 10050,
+   "approved": null,
+   "claimTotal": 10050,
+   "claimApproved": null
+  },
+  "seed-17": {
+   "amount": 2250,
+   "approved": null,
+   "claimTotal": 2250,
+   "claimApproved": null
+  },
+  "seed-20": {
+   "amount": 3500,
+   "approved": 3500,
+   "claimTotal": 3500,
+   "claimApproved": 3500
+  },
+  "seed-22": {
+   "amount": 6300,
+   "approved": null,
+   "claimTotal": 6300,
+   "claimApproved": null
+  },
+  "seed-26": {
+   "amount": 780,
+   "approved": 0,
+   "claimTotal": 780,
+   "claimApproved": 0
+  },
+  "seed-28": {
+   "amount": 4600,
+   "approved": null,
+   "claimTotal": 4600,
+   "claimApproved": null
+  },
+  "seed-30": {
+   "amount": 3640,
+   "approved": null,
+   "claimTotal": 3640,
+   "claimApproved": null
+  },
+  "seed-32": {
+   "amount": 750,
+   "approved": 750,
+   "claimTotal": 750,
+   "claimApproved": 750
+  },
+  "seed-35": {
+   "amount": 430,
+   "approved": null,
+   "claimTotal": 430,
+   "claimApproved": null
+  },
+  "seed-38": {
+   "amount": 1120,
+   "approved": 1120,
+   "claimTotal": 1120,
+   "claimApproved": 1120
+  },
+  "seed-41": {
+   "amount": 5500,
+   "approved": null,
+   "claimTotal": 5500,
+   "claimApproved": null
+  },
+  "seed-43": {
+   "amount": 9700,
+   "approved": 9700
+  },
+  "seed-47": {
+   "amount": 12000,
+   "approved": null
+  },
+  "seed-51": {
+   "amount": 21500,
+   "approved": null
+  },
+  "seed-55": {
+   "amount": 5000,
+   "approved": 5000
+  },
+  "seed-56": {
+   "amount": 6000,
+   "approved": null
+  },
+  "seed-57": {
+   "amount": 3000,
+   "approved": 3000
+  },
+  "seed-58": {
+   "amount": 8000,
+   "approved": null
+  }
+ },
+ "limits": {
+  "fuel|l_fuel_2w|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_2w|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|l_fuel_4w|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|0": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|1": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|2": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|3": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|4": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|5": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|6": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|7": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|8": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 5,
+   "la": null
+  },
+  "fuel|s_fuel_litres|9": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|10": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|s_fuel_litres|11": {
+   "eff": {
+    "qty": 40,
+    "text": "40 litres per claim"
+   },
+   "over": 0,
+   "la": null
+  },
+  "fuel|f_allow_2w|0": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 0,
+   "la": 150
+  },
+  "fuel|f_allow_2w|1": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 0,
+   "la": 150
+  },
+  "fuel|f_allow_2w|2": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 99849,
+   "la": 150
+  },
+  "fuel|f_allow_2w|3": {
+   "eff": {
+    "amount": 300,
+    "units": 2,
+    "per": "day",
+    "text": "₹150 per day × 2 days = ₹300"
+   },
+   "over": 3200,
+   "la": 300
+  },
+  "fuel|f_allow_2w|4": {
+   "eff": {
+    "amount": 450,
+    "units": 3,
+    "per": "day",
+    "text": "₹150 per day × 3 days = ₹450"
+   },
+   "over": 8550,
+   "la": 450
+  },
+  "fuel|f_allow_2w|5": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 750,
+   "la": 150
+  },
+  "fuel|f_allow_2w|6": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 4850,
+   "la": 150
+  },
+  "fuel|f_allow_2w|7": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 3490,
+   "la": 150
+  },
+  "fuel|f_allow_2w|8": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 3850,
+   "la": 150
+  },
+  "fuel|f_allow_2w|9": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 0,
+   "la": 150
+  },
+  "fuel|f_allow_2w|10": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 1050.5,
+   "la": 150
+  },
+  "fuel|f_allow_2w|11": {
+   "eff": {
+    "amount": 150,
+    "units": 1,
+    "per": "day",
+    "text": "₹150 per day"
+   },
+   "over": 0,
+   "la": 150
+  },
+  "fuel|f_allow_4w|0": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 0,
+   "la": 400
+  },
+  "fuel|f_allow_4w|1": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 0,
+   "la": 400
+  },
+  "fuel|f_allow_4w|2": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 99599,
+   "la": 400
+  },
+  "fuel|f_allow_4w|3": {
+   "eff": {
+    "amount": 800,
+    "units": 2,
+    "per": "day",
+    "text": "₹400 per day × 2 days = ₹800"
+   },
+   "over": 2700,
+   "la": 800
+  },
+  "fuel|f_allow_4w|4": {
+   "eff": {
+    "amount": 1200,
+    "units": 3,
+    "per": "day",
+    "text": "₹400 per day × 3 days = ₹1,200"
+   },
+   "over": 7800,
+   "la": 1200
+  },
+  "fuel|f_allow_4w|5": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 500,
+   "la": 400
+  },
+  "fuel|f_allow_4w|6": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 4600,
+   "la": 400
+  },
+  "fuel|f_allow_4w|7": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 3240,
+   "la": 400
+  },
+  "fuel|f_allow_4w|8": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 3600,
+   "la": 400
+  },
+  "fuel|f_allow_4w|9": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 0,
+   "la": 400
+  },
+  "fuel|f_allow_4w|10": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 800.5,
+   "la": 400
+  },
+  "fuel|f_allow_4w|11": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "day",
+    "text": "₹400 per day"
+   },
+   "over": 0,
+   "la": 400
+  },
+  "local|l_conveyance|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_conveyance|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_bf|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_lunch|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_dinner|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_food_nobill|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "local|l_da|0": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 0,
+   "la": 250
+  },
+  "local|l_da|1": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 0,
+   "la": 250
+  },
+  "local|l_da|2": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 99749,
+   "la": 250
+  },
+  "local|l_da|3": {
+   "eff": {
+    "amount": 500,
+    "units": 2,
+    "per": "day",
+    "text": "₹250 per day × 2 days = ₹500"
+   },
+   "over": 3000,
+   "la": 500
+  },
+  "local|l_da|4": {
+   "eff": {
+    "amount": 750,
+    "units": 3,
+    "per": "day",
+    "text": "₹250 per day × 3 days = ₹750"
+   },
+   "over": 8250,
+   "la": 750
+  },
+  "local|l_da|5": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 650,
+   "la": 250
+  },
+  "local|l_da|6": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 4750,
+   "la": 250
+  },
+  "local|l_da|7": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 3390,
+   "la": 250
+  },
+  "local|l_da|8": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 3750,
+   "la": 250
+  },
+  "local|l_da|9": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 0,
+   "la": 250
+  },
+  "local|l_da|10": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 950.5,
+   "la": 250
+  },
+  "local|l_da|11": {
+   "eff": {
+    "amount": 250,
+    "units": 1,
+    "per": "day",
+    "text": "₹250 per day"
+   },
+   "over": 0,
+   "la": 250
+  },
+  "local|l_conv_fixed|0": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 0,
+   "la": 300
+  },
+  "local|l_conv_fixed|1": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 0,
+   "la": 300
+  },
+  "local|l_conv_fixed|2": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 99699,
+   "la": 300
+  },
+  "local|l_conv_fixed|3": {
+   "eff": {
+    "amount": 600,
+    "units": 2,
+    "per": "day",
+    "text": "₹300 per day × 2 days = ₹600"
+   },
+   "over": 2900,
+   "la": 600
+  },
+  "local|l_conv_fixed|4": {
+   "eff": {
+    "amount": 900,
+    "units": 3,
+    "per": "day",
+    "text": "₹300 per day × 3 days = ₹900"
+   },
+   "over": 8100,
+   "la": 900
+  },
+  "local|l_conv_fixed|5": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 600,
+   "la": 300
+  },
+  "local|l_conv_fixed|6": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 4700,
+   "la": 300
+  },
+  "local|l_conv_fixed|7": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 3340,
+   "la": 300
+  },
+  "local|l_conv_fixed|8": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 3700,
+   "la": 300
+  },
+  "local|l_conv_fixed|9": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 0,
+   "la": 300
+  },
+  "local|l_conv_fixed|10": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 900.5,
+   "la": 300
+  },
+  "local|l_conv_fixed|11": {
+   "eff": {
+    "amount": 300,
+    "units": 1,
+    "per": "day",
+    "text": "₹300 per day"
+   },
+   "over": 0,
+   "la": 300
+  },
+  "local|l_mobile|0": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 0,
+   "la": 50
+  },
+  "local|l_mobile|1": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 50,
+   "la": 50
+  },
+  "local|l_mobile|2": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 99949,
+   "la": 50
+  },
+  "local|l_mobile|3": {
+   "eff": {
+    "amount": 100,
+    "units": 2,
+    "per": "day",
+    "text": "₹50 per day × 2 days = ₹100"
+   },
+   "over": 3400,
+   "la": 100
+  },
+  "local|l_mobile|4": {
+   "eff": {
+    "amount": 150,
+    "units": 3,
+    "per": "day",
+    "text": "₹50 per day × 3 days = ₹150"
+   },
+   "over": 8850,
+   "la": 150
+  },
+  "local|l_mobile|5": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 850,
+   "la": 50
+  },
+  "local|l_mobile|6": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 4950,
+   "la": 50
+  },
+  "local|l_mobile|7": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 3590,
+   "la": 50
+  },
+  "local|l_mobile|8": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 3950,
+   "la": 50
+  },
+  "local|l_mobile|9": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 0,
+   "la": 50
+  },
+  "local|l_mobile|10": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 1150.5,
+   "la": 50
+  },
+  "local|l_mobile|11": {
+   "eff": {
+    "amount": 50,
+    "units": 1,
+    "per": "day",
+    "text": "₹50 per day"
+   },
+   "over": 0,
+   "la": 50
+  },
+  "medical|s_med_rx|0": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|1": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|2": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 94999,
+   "la": 5000
+  },
+  "medical|s_med_rx|3": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|4": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 4000,
+   "la": 5000
+  },
+  "medical|s_med_rx|5": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|6": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|7": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|8": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|9": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|10": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_rx|11": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_lab|0": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_lab|1": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_lab|2": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 96999,
+   "la": 3000
+  },
+  "medical|s_med_lab|3": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 500,
+   "la": 3000
+  },
+  "medical|s_med_lab|4": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 6000,
+   "la": 3000
+  },
+  "medical|s_med_lab|5": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_lab|6": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 2000,
+   "la": 3000
+  },
+  "medical|s_med_lab|7": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 640,
+   "la": 3000
+  },
+  "medical|s_med_lab|8": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 1000,
+   "la": 3000
+  },
+  "medical|s_med_lab|9": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_lab|10": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_lab|11": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_consult|0": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 0,
+   "la": 1500
+  },
+  "medical|s_med_consult|1": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 0,
+   "la": 1500
+  },
+  "medical|s_med_consult|2": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 98499,
+   "la": 1500
+  },
+  "medical|s_med_consult|3": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 2000,
+   "la": 1500
+  },
+  "medical|s_med_consult|4": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 7500,
+   "la": 1500
+  },
+  "medical|s_med_consult|5": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 0,
+   "la": 1500
+  },
+  "medical|s_med_consult|6": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 3500,
+   "la": 1500
+  },
+  "medical|s_med_consult|7": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 2140,
+   "la": 1500
+  },
+  "medical|s_med_consult|8": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 2500,
+   "la": 1500
+  },
+  "medical|s_med_consult|9": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 0,
+   "la": 1500
+  },
+  "medical|s_med_consult|10": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 0,
+   "la": 1500
+  },
+  "medical|s_med_consult|11": {
+   "eff": {
+    "amount": 1500,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,500 per bill"
+   },
+   "over": 0,
+   "la": 1500
+  },
+  "medical|s_med_dental|0": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|1": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|2": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 94999,
+   "la": 5000
+  },
+  "medical|s_med_dental|3": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|4": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 4000,
+   "la": 5000
+  },
+  "medical|s_med_dental|5": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|6": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|7": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|8": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|9": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|10": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_dental|11": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "medical|s_med_glasses|0": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_glasses|1": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_glasses|2": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 96999,
+   "la": 3000
+  },
+  "medical|s_med_glasses|3": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 500,
+   "la": 3000
+  },
+  "medical|s_med_glasses|4": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 6000,
+   "la": 3000
+  },
+  "medical|s_med_glasses|5": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_glasses|6": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 2000,
+   "la": 3000
+  },
+  "medical|s_med_glasses|7": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 640,
+   "la": 3000
+  },
+  "medical|s_med_glasses|8": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 1000,
+   "la": 3000
+  },
+  "medical|s_med_glasses|9": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_glasses|10": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_glasses|11": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹3,000 per bill"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "medical|s_med_norx|0": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "medical|s_med_norx|1": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "medical|s_med_norx|2": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 98999,
+   "la": 1000
+  },
+  "medical|s_med_norx|3": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 2500,
+   "la": 1000
+  },
+  "medical|s_med_norx|4": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 8000,
+   "la": 1000
+  },
+  "medical|s_med_norx|5": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "medical|s_med_norx|6": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 4000,
+   "la": 1000
+  },
+  "medical|s_med_norx|7": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 2640,
+   "la": 1000
+  },
+  "medical|s_med_norx|8": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 3000,
+   "la": 1000
+  },
+  "medical|s_med_norx|9": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "medical|s_med_norx|10": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 200.5,
+   "la": 1000
+  },
+  "medical|s_med_norx|11": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹1,000 per bill"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "other|s_vehicle|0": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|1": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|2": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 94999,
+   "la": 5000
+  },
+  "other|s_vehicle|3": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|4": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 4000,
+   "la": 5000
+  },
+  "other|s_vehicle|5": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|6": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|7": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|8": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|9": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|10": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|s_vehicle|11": {
+   "eff": {
+    "amount": 5000,
+    "units": 1,
+    "per": "bill",
+    "text": "₹5,000 per bill"
+   },
+   "over": 0,
+   "la": 5000
+  },
+  "other|x_misc|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "other|x_misc|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_conveyance|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_lodge|0": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "outside|o_lodge|1": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "outside|o_lodge|2": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 96999,
+   "la": 3000
+  },
+  "outside|o_lodge|3": {
+   "eff": {
+    "amount": 6000,
+    "units": 2,
+    "per": "night",
+    "text": "₹3,000 per night × 2 nights = ₹6,000"
+   },
+   "over": 0,
+   "la": 6000
+  },
+  "outside|o_lodge|4": {
+   "eff": {
+    "amount": 9000,
+    "units": 3,
+    "per": "night",
+    "text": "₹3,000 per night × 3 nights = ₹9,000"
+   },
+   "over": 0,
+   "la": 9000
+  },
+  "outside|o_lodge|5": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "outside|o_lodge|6": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 2000,
+   "la": 3000
+  },
+  "outside|o_lodge|7": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 640,
+   "la": 3000
+  },
+  "outside|o_lodge|8": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 1000,
+   "la": 3000
+  },
+  "outside|o_lodge|9": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "outside|o_lodge|10": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "outside|o_lodge|11": {
+   "eff": {
+    "amount": 3000,
+    "units": 1,
+    "per": "night",
+    "text": "₹3,000 per night"
+   },
+   "over": 0,
+   "la": 3000
+  },
+  "outside|o_boarding_bill|0": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|1": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|2": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 98999,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|3": {
+   "eff": {
+    "amount": 2000,
+    "units": 2,
+    "per": "day",
+    "text": "₹1,000 per day × 2 days = ₹2,000"
+   },
+   "over": 1500,
+   "la": 2000
+  },
+  "outside|o_boarding_bill|4": {
+   "eff": {
+    "amount": 3000,
+    "units": 3,
+    "per": "day",
+    "text": "₹1,000 per day × 3 days = ₹3,000"
+   },
+   "over": 6000,
+   "la": 3000
+  },
+  "outside|o_boarding_bill|5": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|6": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 4000,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|7": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 2640,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|8": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 3000,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|9": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|10": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 200.5,
+   "la": 1000
+  },
+  "outside|o_boarding_bill|11": {
+   "eff": {
+    "amount": 1000,
+    "units": 1,
+    "per": "day",
+    "text": "₹1,000 per day"
+   },
+   "over": 0,
+   "la": 1000
+  },
+  "outside|o_da|0": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 0,
+   "la": 500
+  },
+  "outside|o_da|1": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 0,
+   "la": 500
+  },
+  "outside|o_da|2": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 99499,
+   "la": 500
+  },
+  "outside|o_da|3": {
+   "eff": {
+    "amount": 1000,
+    "units": 2,
+    "per": "day",
+    "text": "₹500 per day × 2 days = ₹1,000"
+   },
+   "over": 2500,
+   "la": 1000
+  },
+  "outside|o_da|4": {
+   "eff": {
+    "amount": 1500,
+    "units": 3,
+    "per": "day",
+    "text": "₹500 per day × 3 days = ₹1,500"
+   },
+   "over": 7500,
+   "la": 1500
+  },
+  "outside|o_da|5": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 400,
+   "la": 500
+  },
+  "outside|o_da|6": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 4500,
+   "la": 500
+  },
+  "outside|o_da|7": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 3140,
+   "la": 500
+  },
+  "outside|o_da|8": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 3500,
+   "la": 500
+  },
+  "outside|o_da|9": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 0,
+   "la": 500
+  },
+  "outside|o_da|10": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 700.5,
+   "la": 500
+  },
+  "outside|o_da|11": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 0,
+   "la": 500
+  },
+  "outside|o_boarding_nobill|0": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 0,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|1": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 0,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|2": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 99399,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|3": {
+   "eff": {
+    "amount": 1200,
+    "units": 2,
+    "per": "day",
+    "text": "₹600 per day × 2 days = ₹1,200"
+   },
+   "over": 2300,
+   "la": 1200
+  },
+  "outside|o_boarding_nobill|4": {
+   "eff": {
+    "amount": 1800,
+    "units": 3,
+    "per": "day",
+    "text": "₹600 per day × 3 days = ₹1,800"
+   },
+   "over": 7200,
+   "la": 1800
+  },
+  "outside|o_boarding_nobill|5": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 300,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|6": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 4400,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|7": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 3040,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|8": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 3400,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|9": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 0,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|10": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 600.5,
+   "la": 600
+  },
+  "outside|o_boarding_nobill|11": {
+   "eff": {
+    "amount": 600,
+    "units": 1,
+    "per": "day",
+    "text": "₹600 per day"
+   },
+   "over": 0,
+   "la": 600
+  },
+  "outside|o_food_bf|0": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 0,
+   "la": 200
+  },
+  "outside|o_food_bf|1": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 0,
+   "la": 200
+  },
+  "outside|o_food_bf|2": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 99799,
+   "la": 200
+  },
+  "outside|o_food_bf|3": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 3300,
+   "la": 200
+  },
+  "outside|o_food_bf|4": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 8800,
+   "la": 200
+  },
+  "outside|o_food_bf|5": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 700,
+   "la": 200
+  },
+  "outside|o_food_bf|6": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 4800,
+   "la": 200
+  },
+  "outside|o_food_bf|7": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 3440,
+   "la": 200
+  },
+  "outside|o_food_bf|8": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 3800,
+   "la": 200
+  },
+  "outside|o_food_bf|9": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 0,
+   "la": 200
+  },
+  "outside|o_food_bf|10": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 1000.5,
+   "la": 200
+  },
+  "outside|o_food_bf|11": {
+   "eff": {
+    "amount": 200,
+    "units": 1,
+    "per": "bill",
+    "text": "₹200 per bill"
+   },
+   "over": 0,
+   "la": 200
+  },
+  "outside|o_food_lunch|0": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 0,
+   "la": 350
+  },
+  "outside|o_food_lunch|1": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 0,
+   "la": 350
+  },
+  "outside|o_food_lunch|2": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 99649,
+   "la": 350
+  },
+  "outside|o_food_lunch|3": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 3150,
+   "la": 350
+  },
+  "outside|o_food_lunch|4": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 8650,
+   "la": 350
+  },
+  "outside|o_food_lunch|5": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 550,
+   "la": 350
+  },
+  "outside|o_food_lunch|6": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 4650,
+   "la": 350
+  },
+  "outside|o_food_lunch|7": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 3290,
+   "la": 350
+  },
+  "outside|o_food_lunch|8": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 3650,
+   "la": 350
+  },
+  "outside|o_food_lunch|9": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 0,
+   "la": 350
+  },
+  "outside|o_food_lunch|10": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 850.5,
+   "la": 350
+  },
+  "outside|o_food_lunch|11": {
+   "eff": {
+    "amount": 350,
+    "units": 1,
+    "per": "bill",
+    "text": "₹350 per bill"
+   },
+   "over": 0,
+   "la": 350
+  },
+  "outside|o_food_dinner|0": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 0,
+   "la": 400
+  },
+  "outside|o_food_dinner|1": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 0,
+   "la": 400
+  },
+  "outside|o_food_dinner|2": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 99599,
+   "la": 400
+  },
+  "outside|o_food_dinner|3": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 3100,
+   "la": 400
+  },
+  "outside|o_food_dinner|4": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 8600,
+   "la": 400
+  },
+  "outside|o_food_dinner|5": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 500,
+   "la": 400
+  },
+  "outside|o_food_dinner|6": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 4600,
+   "la": 400
+  },
+  "outside|o_food_dinner|7": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 3240,
+   "la": 400
+  },
+  "outside|o_food_dinner|8": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 3600,
+   "la": 400
+  },
+  "outside|o_food_dinner|9": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 0,
+   "la": 400
+  },
+  "outside|o_food_dinner|10": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 800.5,
+   "la": 400
+  },
+  "outside|o_food_dinner|11": {
+   "eff": {
+    "amount": 400,
+    "units": 1,
+    "per": "bill",
+    "text": "₹400 per bill"
+   },
+   "over": 0,
+   "la": 400
+  },
+  "outside|o_food_nobill|0": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 0,
+   "la": 500
+  },
+  "outside|o_food_nobill|1": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 0,
+   "la": 500
+  },
+  "outside|o_food_nobill|2": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 99499,
+   "la": 500
+  },
+  "outside|o_food_nobill|3": {
+   "eff": {
+    "amount": 1000,
+    "units": 2,
+    "per": "day",
+    "text": "₹500 per day × 2 days = ₹1,000"
+   },
+   "over": 2500,
+   "la": 1000
+  },
+  "outside|o_food_nobill|4": {
+   "eff": {
+    "amount": 1500,
+    "units": 3,
+    "per": "day",
+    "text": "₹500 per day × 3 days = ₹1,500"
+   },
+   "over": 7500,
+   "la": 1500
+  },
+  "outside|o_food_nobill|5": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 400,
+   "la": 500
+  },
+  "outside|o_food_nobill|6": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 4500,
+   "la": 500
+  },
+  "outside|o_food_nobill|7": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 3140,
+   "la": 500
+  },
+  "outside|o_food_nobill|8": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 3500,
+   "la": 500
+  },
+  "outside|o_food_nobill|9": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 0,
+   "la": 500
+  },
+  "outside|o_food_nobill|10": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 700.5,
+   "la": 500
+  },
+  "outside|o_food_nobill|11": {
+   "eff": {
+    "amount": 500,
+    "units": 1,
+    "per": "day",
+    "text": "₹500 per day"
+   },
+   "over": 0,
+   "la": 500
+  },
+  "outside|o_own|0": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 0,
+   "la": 800
+  },
+  "outside|o_own|1": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 0,
+   "la": 800
+  },
+  "outside|o_own|2": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 99199,
+   "la": 800
+  },
+  "outside|o_own|3": {
+   "eff": {
+    "amount": 1600,
+    "units": 2,
+    "per": "night",
+    "text": "₹800 per night × 2 nights = ₹1,600"
+   },
+   "over": 1900,
+   "la": 1600
+  },
+  "outside|o_own|4": {
+   "eff": {
+    "amount": 2400,
+    "units": 3,
+    "per": "night",
+    "text": "₹800 per night × 3 nights = ₹2,400"
+   },
+   "over": 6600,
+   "la": 2400
+  },
+  "outside|o_own|5": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 100,
+   "la": 800
+  },
+  "outside|o_own|6": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 4200,
+   "la": 800
+  },
+  "outside|o_own|7": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 2840,
+   "la": 800
+  },
+  "outside|o_own|8": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 3200,
+   "la": 800
+  },
+  "outside|o_own|9": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 0,
+   "la": 800
+  },
+  "outside|o_own|10": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 400.5,
+   "la": 800
+  },
+  "outside|o_own|11": {
+   "eff": {
+    "amount": 800,
+    "units": 1,
+    "per": "night",
+    "text": "₹800 per night"
+   },
+   "over": 0,
+   "la": 800
+  },
+  "outside|o_ticket|0": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|1": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|2": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|3": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|4": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|5": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|6": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|7": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|8": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|9": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|10": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  },
+  "outside|o_ticket|11": {
+   "eff": {
+    "amount": null,
+    "text": "No fixed limit – approver discretion"
+   },
+   "over": 0,
+   "la": null
+  }
+ },
+ "fuel": {
+  "l_fuel_2w|0": {
+   "totalKm": 42,
+   "amount": 168
+  },
+  "l_fuel_2w|1": {
+   "totalKm": 42,
+   "amount": 120
+  },
+  "l_fuel_2w|2": {
+   "totalKm": 0,
+   "amount": 0
+  },
+  "l_fuel_2w|3": {
+   "totalKm": 0,
+   "amount": 0
+  },
+  "l_fuel_2w|4": {
+   "totalKm": 50,
+   "amount": 0
+  },
+  "l_fuel_2w|5": {
+   "totalKm": 33.19999999999999,
+   "amount": 119.6
+  },
+  "l_fuel_2w|6": {
+   "totalKm": 0,
+   "amount": 0
+  },
+  "l_fuel_2w|7": {
+   "totalKm": 0.010000000000000009,
+   "amount": 0.04
+  },
+  "l_fuel_4w|0": {
+   "totalKm": 42,
+   "amount": 378
+  },
+  "l_fuel_4w|1": {
+   "totalKm": 42,
+   "amount": 270
+  },
+  "l_fuel_4w|2": {
+   "totalKm": 0,
+   "amount": 0
+  },
+  "l_fuel_4w|3": {
+   "totalKm": 0,
+   "amount": 0
+  },
+  "l_fuel_4w|4": {
+   "totalKm": 50,
+   "amount": 0
+  },
+  "l_fuel_4w|5": {
+   "totalKm": 33.19999999999999,
+   "amount": 269.1
+  },
+  "l_fuel_4w|6": {
+   "totalKm": 0,
+   "amount": 0
+  },
+  "l_fuel_4w|7": {
+   "totalKm": 0.010000000000000009,
+   "amount": 0.09
+  }
+ },
+ "usage": {
+  "800000|null": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 3000,
+    "pending": 0,
+    "used": 3000,
+    "balance": 12000
+   }
+  },
+  "800000|seed-20": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 3000,
+    "pending": 0,
+    "used": 3000,
+    "balance": 12000
+   }
+  },
+  "800000|seed-22": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 3000,
+    "pending": 0,
+    "used": 3000,
+    "balance": 12000
+   }
+  },
+  "800000|seed-57": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "800001|null": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-1": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-3": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-6": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-8": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-11": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-17": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-43": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-47": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 6000,
+    "used": 11000,
+    "balance": 4000
+   }
+  },
+  "800001|seed-55": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 6000,
+    "used": 6000,
+    "balance": 9000
+   }
+  },
+  "800001|seed-56": {
+   "medical": {
+    "limit": 15000,
+    "approved": 5200,
+    "pending": 0,
+    "used": 5200,
+    "balance": 9800
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 5000,
+    "pending": 0,
+    "used": 5000,
+    "balance": 10000
+   }
+  },
+  "800002|null": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "800002|seed-26": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "800002|seed-28": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "800002|seed-30": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "800003|null": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 8000,
+    "used": 8000,
+    "balance": 7000
+   }
+  },
+  "800003|seed-32": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 8000,
+    "used": 8000,
+    "balance": 7000
+   }
+  },
+  "800003|seed-35": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 8000,
+    "used": 8000,
+    "balance": 7000
+   }
+  },
+  "800003|seed-51": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 8000,
+    "used": 8000,
+    "balance": 7000
+   }
+  },
+  "800003|seed-58": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "800004|null": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 5500,
+    "used": 5500,
+    "balance": 9500
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "800004|seed-38": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 5500,
+    "used": 5500,
+    "balance": 9500
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "800004|seed-41": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  },
+  "999999|null": {
+   "medical": {
+    "limit": 15000,
+    "approved": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   },
+   "advance": {
+    "limit": 15000,
+    "outstanding": 0,
+    "pending": 0,
+    "used": 0,
+    "balance": 15000
+   }
+  }
+ },
+ "fmt": {
+  "money": [
+   [
+    "₹0.00",
+    "₹0",
+    "0"
+   ],
+   [
+    "₹1.00",
+    "₹1",
+    "1"
+   ],
+   [
+    "₹1,234.50",
+    "₹1,235",
+    "1,234.5"
+   ],
+   [
+    "₹12,34,567.89",
+    "₹12,34,568",
+    "12,34,567.891"
+   ],
+   [
+    "-₹5.00",
+    "-₹5",
+    "-5"
+   ],
+   [
+    "₹12.00",
+    "₹12",
+    "12"
+   ],
+   [
+    "₹0.00",
+    "₹0",
+    "0"
+   ],
+   [
+    "₹0.00",
+    "₹0",
+    "0"
+   ],
+   [
+    "₹0.01",
+    "₹0",
+    "0.005"
+   ],
+   [
+    "₹9,99,99,999.00",
+    "₹9,99,99,999",
+    "9,99,99,999"
+   ]
+  ],
+  "dates": [
+   [
+    "23 Sep 2026",
+    "Wednesday, 23 September 2026",
+    "23 Sep 2026"
+   ],
+   [
+    "1 Jan 2026",
+    "Thursday, 1 January 2026",
+    "1 Jan 2026"
+   ],
+   [
+    "31 Dec 2026",
+    "Thursday, 31 December 2026",
+    "31 Dec 2026, 10:00 AM"
+   ],
+   [
+    "—",
+    "—",
+    "—"
+   ],
+   [
+    "—",
+    "—",
+    "—"
+   ],
+   [
+    "—",
+    "—",
+    "—"
+   ],
+   [
+    "—",
+    "—",
+    "—"
+   ]
+  ],
+  "times": [
+   "12:00 AM",
+   "6:05 AM",
+   "12:00 PM",
+   "1:45 PM",
+   "11:59 PM",
+   "—",
+   "—"
+  ],
+  "sizes": [
+   "0 B",
+   "100 B",
+   "1023 B",
+   "1 KB",
+   "214 KB",
+   "5.0 MB",
+   "5.5 MB"
+  ],
+  "initials": [
+   "KR",
+   "S",
+   "",
+   "AB",
+   ""
+  ],
+  "misc": {
+   "plural1": "1 bill",
+   "plural3": "3 bills",
+   "pluralEntry": "2 entries",
+   "between": 3,
+   "leap": 3,
+   "today": "2026-10-15"
+  }
+ },
+ "perm": {
+  "employee|seed-1": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-3": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-6": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": true
+  },
+  "employee|seed-8": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-11": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-17": {
+   "view": true,
+   "edit": true,
+   "approve": false,
+   "del": true,
+   "copy": false
+  },
+  "employee|seed-20": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-22": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-26": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-28": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-30": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-32": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-35": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-38": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-41": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "employee|seed-43": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "employee|seed-47": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "employee|seed-51": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "employee|seed-55": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "employee|seed-56": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "employee|seed-57": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "employee|seed-58": {
+   "view": false,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "employee|label": [
+   "Submitted",
+   "Approved"
+  ],
+  "admin|seed-1": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-3": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-6": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-8": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-11": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-17": {
+   "view": false,
+   "edit": true,
+   "approve": false,
+   "del": true,
+   "copy": false
+  },
+  "admin|seed-20": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-22": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-26": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-28": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-30": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-32": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-35": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-38": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-41": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false,
+   "copy": false
+  },
+  "admin|seed-43": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "admin|seed-47": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false
+  },
+  "admin|seed-51": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false
+  },
+  "admin|seed-55": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "admin|seed-56": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false
+  },
+  "admin|seed-57": {
+   "view": true,
+   "edit": false,
+   "approve": false,
+   "del": false
+  },
+  "admin|seed-58": {
+   "view": true,
+   "edit": false,
+   "approve": true,
+   "del": false
+  },
+  "admin|label": [
+   "Pending Approval",
+   "Approved"
+  ]
+ },
+ "variants": [
+  {},
+  {
+   "amount": 100
+  },
+  {
+   "amount": 99999
+  },
+  {
+   "amount": 3500,
+   "fromDate": "2026-09-23",
+   "toDate": "2026-09-25"
+  },
+  {
+   "amount": 9000,
+   "fromDate": "2026-09-23",
+   "toDate": "2026-09-26"
+  },
+  {
+   "amount": 900,
+   "fromDate": "2026-09-23",
+   "toDate": "2026-09-23"
+  },
+  {
+   "amount": 5000,
+   "fromDate": "2026-09-23",
+   "toDate": "2026-09-23"
+  },
+  {
+   "qty": 35,
+   "amount": 3640
+  },
+  {
+   "qty": 45,
+   "amount": 4000
+  },
+  {
+   "qty": 40
+  },
+  {
+   "amount": "1200.50"
+  },
+  {
+   "amount": "abc"
+  }
+ ],
+ "fuelInputs": [
+  {
+   "fromKm": 23410,
+   "toKm": 23452,
+   "nonAccountableKm": 0
+  },
+  {
+   "fromKm": 23410,
+   "toKm": 23452,
+   "nonAccountableKm": 12
+  },
+  {
+   "fromKm": 100,
+   "toKm": 100,
+   "nonAccountableKm": 0
+  },
+  {
+   "fromKm": 200,
+   "toKm": 100,
+   "nonAccountableKm": 0
+  },
+  {
+   "fromKm": 100,
+   "toKm": 150,
+   "nonAccountableKm": 80
+  },
+  {
+   "fromKm": 100.5,
+   "toKm": 133.7,
+   "nonAccountableKm": 3.3
+  },
+  {
+   "fromKm": "",
+   "toKm": "",
+   "nonAccountableKm": ""
+  },
+  {
+   "fromKm": 1,
+   "toKm": 1.01,
+   "nonAccountableKm": 0
+  }
+ ]
+}

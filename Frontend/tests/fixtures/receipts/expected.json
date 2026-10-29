@@ -1,0 +1,62 @@
+{
+ "restaurant.png": {
+  "date": "2026-09-21",
+  "billerName": "SARAVANA BHAVAN",
+  "billNumber": "4471",
+  "amount": 168
+ },
+ "fuel.png": {
+  "date": "2026-09-30",
+  "billerName": "HP PETROL BUNK",
+  "billNumber": "HP-21190",
+  "amount": 3640
+ },
+ "pharmacy.png": {
+  "date": "2026-10-09",
+  "billerName": "APOLLO PHARMACY",
+  "billNumber": "AP-77310",
+  "amount": 640
+ },
+ "cab.png": {
+  "date": "2026-10-05",
+  "billerName": "Uber India Systems Pvt Ltd",
+  "billNumber": "UB-88124",
+  "amount": 410
+ },
+ "hotel.png": {
+  "date": "2026-09-25",
+  "billerName": "LEMON TREE HOTEL",
+  "billNumber": "LT-2026-11890",
+  "amount": 5600
+ },
+ "lab.png": {
+  "date": "2026-08-10",
+  "billerName": "APOLLO DIAGNOSTICS",
+  "billNumber": "AD-55821",
+  "amount": 2200
+ },
+ "restaurant_noisy.png": {
+  "date": "2026-09-23",
+  "billerName": "TRUFFLES",
+  "billNumber": "TR-88213",
+  "amount": 420
+ },
+ "train.png": {
+  "date": "2026-09-23",
+  "billerName": "IRCTC e-Ticket",
+  "billNumber": "4412098765",
+  "amount": 2450
+ },
+ "pharmacy_jpg.jpg": {
+  "date": "2026-10-09",
+  "billerName": "APOLLO PHARMACY",
+  "billNumber": "AP-77310",
+  "amount": 640
+ },
+ "restaurant_scan.pdf": {
+  "date": "2026-09-21",
+  "billerName": "SARAVANA BHAVAN",
+  "billNumber": "4471",
+  "amount": 168
+ }
+}

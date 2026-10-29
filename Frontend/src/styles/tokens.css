@@ -1,0 +1,145 @@
+/* ==========================================================================
+   RXD design tokens
+   Every value here is a defined RXD token. Do not add near-miss values; if a
+   value is genuinely missing from the system, name the gap in a comment.
+   ========================================================================== */
+:root {
+  /* ---- Brand ---------------------------------------------------------- */
+  --nb-brand-500: #316ADD;
+  --nb-brand-600: #2057C5;
+  --nb-brand-700: #1B4AA7;
+  --nb-brand-disabled: #B8CFEF;
+  --nb-brand-tint: #EBF3FF;
+  --nb-brand-dark-tint: #D6E8FF;
+
+  /* ---- Neutral ramp --------------------------------------------------- */
+  --nb-gray-25: #FCFCFD;
+  --nb-gray-50: #F9FAFB;
+  --nb-gray-100: #F2F4F7;
+  --nb-gray-200: #EAECF0;
+  --nb-gray-300: #D0D5DD;
+  --nb-gray-400: #98A2B3;
+  --nb-gray-500: #667085;
+  --nb-gray-600: #475467;
+  --nb-gray-700: #344054;
+  --nb-gray-800: #1D2939;
+  --nb-gray-900: #101828;
+  --nb-white: #FFFFFF;
+
+  /* ---- Semantic neutrals ---------------------------------------------- */
+  --nb-page: var(--nb-gray-50);
+  --nb-surface: var(--nb-white);
+  --nb-border: #E5E7EB;
+  --nb-border-dark: #D0D5DD;
+  --nb-divider: var(--nb-gray-200);
+  --nb-text-primary: #1D2939;
+  --nb-text-secondary: #667085;
+  --nb-text-tertiary: #475467;
+  --nb-text-strong: #344054;
+  --nb-text-heading: #101828;
+  --nb-text-disabled: #98A2B3;
+  --nb-placeholder: #98A2B3;
+  --nb-icon: #475467;
+
+  /* ---- Status families (25 · 50 · 100 · 500 · 600 · 700 · 800) -------- */
+  --nb-success-25: #F6FEF9;  --nb-success-50: #ECFDF3;  --nb-success-100: #D1FADF;
+  --nb-success-500: #0E9F63; --nb-success-600: #2BAB60; --nb-success-700: #239752; --nb-success-800: #1A7A3F;
+
+  --nb-error-25: #FFFBFA;    --nb-error-50: #FEF3F2;    --nb-error-100: #FEE4E2;
+  --nb-error-500: #DF3A3A;   --nb-error-600: #C92C2C;   --nb-error-700: #B01F1F;   --nb-error-800: #6F1712;
+
+  --nb-warning-25: #FFFCF5;  --nb-warning-50: #FFFAEB;  --nb-warning-100: #FEF0C7;
+  --nb-warning-500: #C76A00; --nb-warning-600: #F5A314; --nb-warning-700: #DD9100; --nb-warning-800: #C57F00;
+
+  --nb-info-25: #F8F9FC;     --nb-info-50: #EBEFF9;     --nb-info-100: #D9E0F5;
+  --nb-info-500: #4264CC;    --nb-info-600: #2C49A3;    --nb-info-700: #253E8A;    --nb-info-800: #1E3371;
+
+  --nb-bluegray-25: #FCFCFD; --nb-bluegray-50: #F8F9FC; --nb-bluegray-100: #EAECF5;
+  --nb-bluegray-500: #4E5BA6; --nb-bluegray-600: #3E4784; --nb-bluegray-700: #363F72; --nb-bluegray-800: #293056;
+
+  /* ---- Categorical families (fixed order: Blue Light, Purple, Fresh Green,
+          Orange, Turquoise) — tags, chart series, avatar fills ----------- */
+  --nb-bluelight-50: #F0F9FF;  --nb-bluelight-100: #E0F2FE;  --nb-bluelight-500: #0BA5EC;  --nb-bluelight-700: #026AA2;
+  --nb-purple-50: #F4F3FF;     --nb-purple-100: #EBE9FE;     --nb-purple-500: #7A5AF8;     --nb-purple-700: #5925DC;
+  --nb-freshgreen-50: #F7FCE8; --nb-freshgreen-100: #F0F9D5; --nb-freshgreen-500: #8EB819; --nb-freshgreen-700: #617E11;
+  --nb-orange-50: #FFF6ED;     --nb-orange-100: #FFEAD5;     --nb-orange-500: #FB6514;     --nb-orange-700: #C4320A;
+  --nb-turquoise-50: #E9FBFA;  --nb-turquoise-100: #D7F7F4;  --nb-turquoise-500: #27BFB3;  --nb-turquoise-700: #187770;
+
+  /* ---- Typography ----------------------------------------------------- */
+  --nb-font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --nb-font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+  --nb-text-xs: 0.75rem;   /* 12px captions, helper text, table meta */
+  --nb-text-s: 0.813rem;   /* 13px dense tables, compact controls */
+  --nb-text-m: 0.875rem;   /* 14px default body */
+  --nb-text-l: 1rem;       /* 16px emphasis */
+
+  --nb-heading-12: 0.75rem;  --nb-lh-12: 1.0625rem;
+  --nb-heading-13: 0.813rem; --nb-lh-13: 1.25rem;
+  --nb-heading-14: 0.875rem; --nb-lh-14: 1.25rem;
+  --nb-heading-16: 1rem;     --nb-lh-16: 1.5rem;
+  --nb-heading-18: 1.125rem; --nb-lh-18: 1.75rem;
+  --nb-heading-24: 1.5rem;   --nb-lh-24: 2rem;
+  --nb-heading-28: 1.75rem;  --nb-lh-28: 2.25rem;
+  --nb-heading-32: 2rem;     --nb-lh-32: 2.5rem;
+
+  --nb-weight-regular: 400;
+  --nb-weight-medium: 500;
+  --nb-weight-semibold: 600;
+  --nb-weight-bold: 700;
+
+  /* ---- Spacing (4px base; 2 and 6 for tight interior work) ------------ */
+  --nb-space-2: 2px;
+  --nb-space-4: 4px;
+  --nb-space-6: 6px;
+  --nb-space-8: 8px;
+  --nb-space-12: 12px;
+  --nb-space-16: 16px;
+  --nb-space-20: 20px;
+  --nb-space-24: 24px;
+  --nb-space-32: 32px;
+  --nb-space-72: 72px;
+
+  /* ---- Radius --------------------------------------------------------- */
+  --nb-radius-sm: 4px;
+  --nb-radius-md: 8px;
+  --nb-radius-lg: 12px;
+  --nb-radius-xl: 16px;
+  --nb-radius-full: 9999px;
+
+  /* ---- Elevation (blue-tinted rgba(24,40,88,…)) ----------------------- */
+  --nb-shadow-xs: 0 1px 2px rgba(24, 40, 88, 0.05);
+  --nb-shadow-sm: 0 1px 2px rgba(24, 40, 88, 0.06), 0 1px 3px rgba(24, 40, 88, 0.10);
+  --nb-shadow-md: 0 2px 4px -2px rgba(24, 40, 88, 0.06), 0 4px 8px -2px rgba(24, 40, 88, 0.10);
+  --nb-shadow-lg: 0 4px 6px -2px rgba(24, 40, 88, 0.03), 0 12px 16px -4px rgba(24, 40, 88, 0.08);
+  --nb-shadow-xl: 0 8px 8px -4px rgba(24, 40, 88, 0.03), 0 20px 24px -4px rgba(24, 40, 88, 0.08);
+
+  /* ---- Motion --------------------------------------------------------- */
+  --nb-duration-fast: 150ms;   /* hover, focus, selection */
+  --nb-duration-base: 300ms;   /* entrance / exit */
+  --nb-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --nb-opacity-disabled: 0.5;
+  --nb-opacity-hover: 0.9;
+
+  /* ---- Control sizing ------------------------------------------------- */
+  --nb-control-xs: 32px;
+  --nb-control-sm: 36px;
+  --nb-control-md: 40px;
+  --nb-control-lg: 44px;
+  --nb-icon-size: 16px;
+  --nb-icon-size-lg: 20px;
+  --nb-icon-size-xl: 24px;
+
+  /* ---- Layering ------------------------------------------------------- */
+  --nb-z-dropdown: 1000;
+  --nb-z-sticky: 1020;
+  --nb-z-fixed: 1030;
+  --nb-z-backdrop: 1040;
+  --nb-z-modal: 1050;
+  --nb-z-popover: 1060;
+  --nb-z-tooltip: 1070;
+
+  /* ---- Layout (module-level, built from the spacing scale) ------------ */
+  --tc-topbar-height: 56px;
+  --tc-content-max: 1440px;
+}
