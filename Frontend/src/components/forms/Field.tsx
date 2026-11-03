@@ -145,11 +145,11 @@ export function CheckField({ label, helper, checked, onChange, full }: { label: 
 
 /** Drop zone + chips for bills. File CONTENT upload is not wired (backend route unknown): metadata only, as in the prototype. */
 export function FileField(p: {
-  label?: string; files: AttachmentMeta[]; multiple?: boolean; readonly?: boolean; required?: boolean; optional?: boolean;
+  label?: string; files: AttachmentMeta[]; multiple?: boolean; readonly?: boolean; disabled?: boolean; required?: boolean; optional?: boolean;
   helper?: string; error?: string; placeholder?: string; full?: boolean; onAdd: (files: File[]) => void; onRemove: (i: number) => void; testId?: string;
 }) {
   const id = 'u' + useId().replace(/:/g, '');
-  const showZone = !p.readonly && (p.multiple || !p.files.length);
+  const showZone = !p.readonly && !p.disabled && (p.multiple || !p.files.length);
   return (
     <div className={'tc-field' + (p.error ? ' tc-field--error' : '') + (p.full ? ' tc-span-all' : '')}>
       {p.label ? (
@@ -160,7 +160,7 @@ export function FileField(p: {
       ) : null}
       <div className={'tc-file' + (p.files.length ? ' has-files' : '')}>
         {p.files.length ? (
-          <div className="tc-file__chips">{p.files.map((a, i) => <FileChip key={a.name + i} att={a} onRemove={p.readonly ? undefined : () => p.onRemove(i)} />)}</div>
+          <div className="tc-file__chips">{p.files.map((a, i) => <FileChip key={a.name + i} att={a} onRemove={p.readonly || p.disabled ? undefined : () => p.onRemove(i)} />)}</div>
         ) : null}
         {showZone ? (
           <label className="tc-dropzone" htmlFor={id}>

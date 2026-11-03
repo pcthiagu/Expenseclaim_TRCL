@@ -16,16 +16,17 @@ MERGE dbo.TA_FieldDef AS t USING (VALUES
   (N'toLocation', N'To Location', N'text', 1, 0, 0, 0, NULL, N'e.g. Tidel Park', NULL, NULL, NULL, 10),
   (N'billerName', N'Biller Name', N'text', 0, 0, 0, 0, NULL, N'Vendor or establishment', NULL, NULL, NULL, 11),
   (N'billNumber', N'Bill Number', N'text', 0, 0, 0, 0, NULL, N'As printed on the bill', NULL, NULL, NULL, 12),
-  (N'fromKm', N'From KM', N'number', 1, 0, 0, 0, NULL, NULL, NULL, 0, 1, 13),
-  (N'toKm', N'To KM', N'number', 1, 0, 0, 0, NULL, NULL, NULL, 0, 1, 14),
-  (N'totalKm', N'Total KM', N'number', 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 15),
-  (N'nonAccountableKm', N'KM – Non Accountable', N'number', 0, 0, 0, 0, NULL, NULL, N'Personal detour kilometres, deducted before computing the amount', 0, 1, 16),
-  (N'qty', N'Quantity (litres)', N'number', 1, 0, 0, 0, NULL, NULL, NULL, 0, 0.01, 17),
-  (N'amount', N'Amount', N'money', 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 18),
-  (N'limit', N'Policy Limit', N'money', 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 19),
-  (N'remarks', N'Remarks', N'textarea', 0, 0, 1, 0, NULL, N'Anything the approver should know', NULL, NULL, NULL, 20),
-  (N'alongWith', N'Along With', N'text', 0, 0, 1, 0, NULL, N'Colleagues who travelled with you, if any', NULL, NULL, NULL, 21),
-  (N'attachment', N'Attach Document', N'file', 0, 0, 1, 0, NULL, NULL, N'PDF, JPG or PNG up to 5 MB', NULL, NULL, 22)
+  (N'isBillAvailable', N'Is Bill Available', N'select', 1, 0, 0, 0, N'BILL_AVAILABILITY', NULL, NULL, NULL, NULL, 13),
+  (N'fromKm', N'From KM', N'number', 1, 0, 0, 0, NULL, NULL, NULL, 0, 1, 14),
+  (N'toKm', N'To KM', N'number', 1, 0, 0, 0, NULL, NULL, NULL, 0, 1, 15),
+  (N'totalKm', N'Total KM', N'number', 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 16),
+  (N'nonAccountableKm', N'KM – Non Accountable', N'number', 0, 0, 0, 0, NULL, NULL, N'Personal detour kilometres, deducted before computing the amount', 0, 1, 17),
+  (N'qty', N'Quantity (litres)', N'number', 1, 0, 0, 0, NULL, NULL, NULL, 0, 0.01, 18),
+  (N'amount', N'Amount', N'money', 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 19),
+  (N'limit', N'Policy Limit', N'money', 0, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 20),
+  (N'remarks', N'Remarks', N'textarea', 0, 0, 1, 0, NULL, N'Anything the approver should know', NULL, NULL, NULL, 21),
+  (N'alongWith', N'Along With', N'text', 0, 0, 1, 0, NULL, N'Colleagues who travelled with you, if any', NULL, NULL, NULL, 22),
+  (N'attachment', N'Attach Document', N'file', 0, 0, 1, 0, NULL, NULL, N'PDF, JPG or PNG up to 5 MB', NULL, NULL, 23)
 ) AS s (FieldKey, Label, FieldType, IsRequired, IsComputed, IsFull, IsReadonly, OptionsKey, Placeholder, Helper, MinValue, StepValue, SortOrder)
 ON t.FieldKey = s.FieldKey
 WHEN MATCHED THEN UPDATE SET Label = s.Label, FieldType = s.FieldType, IsRequired = s.IsRequired, IsComputed = s.IsComputed, IsFull = s.IsFull, IsReadonly = s.IsReadonly, OptionsKey = s.OptionsKey, Placeholder = s.Placeholder, Helper = s.Helper, MinValue = s.MinValue, StepValue = s.StepValue, SortOrder = s.SortOrder
@@ -95,6 +96,8 @@ SELECT s.k, s.v, s.o FROM (VALUES
   (N'MODES', N'Own Two Wheeler', 6),
   (N'MODES', N'Own Four Wheeler', 7),
   (N'MODES', N'Flight', 8),
+  (N'BILL_AVAILABILITY', N'Yes', 1),
+  (N'BILL_AVAILABILITY', N'No', 2),
   (N'CITIES', N'Chennai', 1),
   (N'CITIES', N'Bengaluru', 2),
   (N'CITIES', N'Hyderabad', 3),

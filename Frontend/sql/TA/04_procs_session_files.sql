@@ -46,7 +46,7 @@ BEGIN
 END
 GO
 
-/* Stub for location-specific ceilings. Replace the final SELECT with the approved policy lookup when its source is ready. */
+/* Stub for location- and bill-availability-specific ceilings. Replace the final SELECT with the approved policy lookup when its source is ready. */
 CREATE OR ALTER PROCEDURE dbo.TA_usp_GetLocationPolicyLimit @JsonParam NVARCHAR(MAX) AS
 BEGIN
   SET NOCOUNT ON;
@@ -55,9 +55,17 @@ BEGIN
 
   DECLARE @itemKey NVARCHAR(30) = NULLIF(LTRIM(RTRIM(JSON_VALUE(@JsonParam, '$.ItemKey'))), N'');
   DECLARE @stayLocation NVARCHAR(100) = NULLIF(LTRIM(RTRIM(JSON_VALUE(@JsonParam, '$.StayLocation'))), N'');
-  IF @itemKey IS NULL OR @stayLocation IS NULL THROW 50000, N'[VALIDATION] Item and stay location are required.', 1;
+  DECLARE @billAvailable NVARCHAR(3) = NULLIF(LTRIM(RTRIM(JSON_VALUE(@JsonParam, '$.IsBillAvailable'))), N'');
+  IF @billAvailable IS NOT NULL AND UPPER(@billAvailable) NOT IN (N'YES', N'NO')
+    THROW 50000, N'[VALIDATION] Bill availability must be Yes or No.', 1;
+  SET @billAvailable = CASE WHEN UPPER(@billAvailable) = N'YES' THEN N'Yes' WHEN UPPER(@billAvailable) = N'NO' THEN N'No' END;
+  IF @itemKey IS NULL OR (@stayLocation IS NULL AND @billAvailable IS NULL)
+    THROW 50000, N'[VALIDATION] Item and either stay location or bill availability are required.', 1;
+  DECLARE @enforceEligibility CHAR(1);
+  SELECT @enforceEligibility = EnforceEligibility FROM dbo.TA_ExpenseItem WHERE ItemKey = @itemKey;
+  IF @enforceEligibility IS NULL THROW 50000, N'[VALIDATION] Unknown expense item.', 1;
 
-  SELECT N'{"limit":null,"limitPer":null,"enforceEligibility":"N"}' AS JsonResult;
+  SELECT N'{"limit":null,"limitPer":null,"enforceEligibility":"' + @enforceEligibility + N'"}' AS JsonResult;
 END
 GO
 

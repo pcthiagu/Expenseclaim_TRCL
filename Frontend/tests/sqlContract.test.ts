@@ -67,7 +67,8 @@ test('the SQL seed is the single source of the reference data: complete, consist
   assert.equal(ref.types.length, 5);
   assert.deepEqual(ref.types.map((t) => t.key), ['fuel', 'local', 'medical', 'other', 'outside'], 'expense types in the order the dropdown shows them');
   assert.equal(ref.types.reduce((n, t) => n + t.items.length, 0), 32);
-  assert.equal(ref.fields.length, 22);
+  assert.equal(ref.fields.length, 23);
+  assert.deepEqual(ref.lookups.BILL_AVAILABILITY, ['Yes', 'No']);
   const fieldKeys = new Set(ref.fields.map((f) => f.key));
   const itemKeys = new Set<string>();
   for (const t of ref.types) for (const i of t.items) {
@@ -94,6 +95,10 @@ test('GetReferenceData returns everything the screens read, and the tables/colum
     assert.match(proc, new RegExp(`AS \\[${k}\\]`), `key ${k}`);
   assert.match(proc, /FROM dbo\.TA_Lookup/); assert.match(proc, /FROM dbo\.TA_vw_Employee/); assert.match(proc, /"COST_CENTRE"/);
   assert.match(all, /JSON array of FieldKeys/, 'FieldList is a JSON array (order preserved)');
+  const limitProc = all.slice(all.indexOf('CREATE OR ALTER PROCEDURE dbo.TA_usp_GetLocationPolicyLimit'), all.indexOf('CREATE OR ALTER PROCEDURE dbo.TA_usp_GetReferenceData'));
+  assert.match(limitProc, /JSON_VALUE\(@JsonParam, '\$\.IsBillAvailable'\)/);
+  assert.match(limitProc, /@stayLocation IS NULL AND @billAvailable IS NULL/);
+  assert.match(limitProc, /SELECT @enforceEligibility = EnforceEligibility FROM dbo\.TA_ExpenseItem/);
 });
 
 test('the approval trail procedure returns who/what/when and is allowed in both views', () => {

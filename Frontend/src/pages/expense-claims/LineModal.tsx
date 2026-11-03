@@ -8,7 +8,7 @@ import { Field, FileField } from '../../components/forms/Field';
 import { ModalFrame, useModal } from '../../components/modals/ModalHost';
 import { useToast } from '../../components/common/Toast';
 import { applyFuel, effectiveLimit, fuelRate, lineLimitAmount, overLimit } from '../../domain/calc';
-import { FIELD_DEFS, itemByKey, lookup, typeByKey } from '../../domain/expenseSchema';
+import { FIELD_DEFS, itemByKey, lookup, normalizeBillAvailability, typeByKey, withBillAvailabilityDefault } from '../../domain/expenseSchema';
 import { attachmentFromReceipt, pickableForLine, prefillFromReceipts } from '../../domain/receipts';
 import { hasAnySuggestion } from '../../domain/receiptOcr';
 import { normalizeLine, validateLine } from '../../domain/validation';
@@ -57,6 +57,8 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
 
   const [draft, setDraft] = useState<ClaimLine>(() => {
     const base: ClaimLine = existing ? JSON.parse(JSON.stringify(existing)) as ClaimLine : { id: newId(), itemKey: '', fields: {}, attachments: [], approvedAmount: null, approverRemarks: '' };
+    const item = itemByKey(claim.expenseType, base.itemKey);
+    if (item) base.fields = withBillAvailabilityDefault(item, base.fields);
     return base;
   });
   // Receipt-box preset (Create claim from receipt box): attach those bills once the box has loaded.
@@ -88,30 +90,35 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
   const idef = itemByKey(claim.expenseType, draft.itemKey);
   const view: LineFields = idef?.compute === 'fuelKm' ? applyFuel(idef, draft.fields) : draft.fields;
   const stayLocation = idef?.fields.includes('stayLocation') ? String(view.stayLocation ?? '').trim() : '';
-  const locationPolicyKey = idef && stayLocation ? `${idef.key}:${stayLocation}` : '';
+  const billAvailable = idef?.fields.includes('isBillAvailable')
+    ? normalizeBillAvailability(view.isBillAvailable)
+    : undefined;
+  const locationPolicyKey = idef && (stayLocation || billAvailable)
+    ? `${idef.key}:${stayLocation}:${billAvailable ?? ''}`
+    : '';
   const [locationPolicy, setLocationPolicy] = useState<{
     key: string;
     status: 'loading' | 'loaded' | 'error';
     result: LocationPolicyLimit | null;
   } | null>(null);
   useEffect(() => {
-    if (!idef || !stayLocation) {
+    if (!idef || (!stayLocation && !billAvailable)) {
       setLocationPolicy(null);
       return;
     }
     let cancelled = false;
-    const key = `${idef.key}:${stayLocation}`;
+    const key = `${idef.key}:${stayLocation}:${billAvailable ?? ''}`;
     setLocationPolicy({ key, status: 'loading', result: null });
-    void gateway.getLocationPolicyLimit(idef.key, stayLocation).then((result) => {
+    void gateway.getLocationPolicyLimit(idef.key, stayLocation, billAvailable).then((result) => {
       if (!cancelled) setLocationPolicy({ key, status: 'loaded', result });
     }).catch(() => {
       if (!cancelled) setLocationPolicy({ key, status: 'error', result: null });
     });
     return () => { cancelled = true; };
-  }, [gateway, idef?.key, stayLocation]);
+  }, [gateway, idef?.key, stayLocation, billAvailable]);
   const currentLocationPolicy = locationPolicy?.key === locationPolicyKey ? locationPolicy : null;
-  const usesLocationPolicy = !!locationPolicyKey;
-  const limitDef = usesLocationPolicy
+  const usesDynamicPolicy = !!locationPolicyKey;
+  const limitDef = usesDynamicPolicy
     ? currentLocationPolicy?.status === 'loaded'
       ? {
           ...idef!,
@@ -122,6 +129,7 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
       : null
     : idef;
   const wide = idef ? orphanFields(idef.fields) : new Set<FieldKey>();
+  const billUnavailable = billAvailable === 'No';
   const set = (k: FieldKey, v: string | number): void => { setDraft((d) => ({ ...d, fields: { ...d.fields, [k]: v } })); };
 
   const pickable = pickableForLine(receipts, claim.items, draft, claim.id);
@@ -173,7 +181,7 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
     focusAfterPick.current = !!key;
     const nd = itemByKey(claim.expenseType, key);
     setDraft((d) => {
-      let fields: LineFields = nd ? prefillFromReceipts(nd, {}, receiptsOn(d)) : {};
+      let fields: LineFields = nd ? withBillAvailabilityDefault(nd, prefillFromReceipts(nd, {}, receiptsOn(d))) : {};
       ocrAmount.current = null; ocrBill.current = null;
       for (const sug of seen.current) fields = applyOcr(fields, key, sug).fields; // bills already read on this line fill the new item's blank fields
       return { ...d, itemKey: key, fields };
@@ -204,10 +212,10 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
   };
 
   const save = (): void => {
-    if (usesLocationPolicy && currentLocationPolicy?.status !== 'loaded') {
+    if (usesDynamicPolicy && currentLocationPolicy?.status !== 'loaded') {
       const message = currentLocationPolicy?.status === 'error'
-        ? `Could not verify eligibility for ${stayLocation}. Try changing the location and waiting for its policy to load.`
-        : `Wait for the eligibility limit for ${stayLocation} to load.`;
+        ? 'Could not verify eligibility. Try changing the location or bill availability and wait for the policy to load.'
+        : 'Wait for the eligibility limit to load.';
       setErrors({ amount: message });
       setSummary([`Amount: ${message}`]);
       return;
@@ -224,6 +232,7 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
 
   const fieldEl = (key: FieldKey): ReactNode => {
     if (!idef) return null;
+    if (billUnavailable && (key === 'billerName' || key === 'billNumber' || key === 'attachment')) return null;
     const fd = FIELD_DEFS[key];
     const span = !!fd.full || wide.has(key);
     const common = { label: fd.label, required: !!fd.required, error: errors[key], full: span };
@@ -234,12 +243,13 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
       }
       case 'amount': {
         const over = overLimit(limitDef, view);
-        const limit = (usesLocationPolicy || idef.fields.includes('limit')) && limitDef ? effectiveLimit(limitDef, view) : null;
+        const limit = (usesDynamicPolicy || idef.fields.includes('limit')) && limitDef ? effectiveLimit(limitDef, view) : null;
         const props = { ...common, type: 'money' as const, value: val, onChange: (v: string | number) => set(key, v), testId: 'line-amount' } as const;
-        const policyHelper = usesLocationPolicy
-          ? currentLocationPolicy?.status === 'loading' || !currentLocationPolicy ? `Loading policy limit for ${stayLocation}…`
-            : currentLocationPolicy.status === 'error' ? `Could not load policy limit for ${stayLocation}.`
-              : limit ? `Policy limit for ${stayLocation}: ${limit.text}.` : `No policy limit configured for ${stayLocation}.`
+        const policyContext = stayLocation ? ` for ${stayLocation}` : billAvailable ? ` (${billAvailable.toLowerCase()} bill)` : '';
+        const policyHelper = usesDynamicPolicy
+          ? currentLocationPolicy?.status === 'loading' || !currentLocationPolicy ? `Loading policy limit${policyContext}…`
+            : currentLocationPolicy.status === 'error' ? `Could not load policy limit${policyContext}.`
+              : limit ? `Policy limit${policyContext}: ${limit.text}.` : `No policy limit configured${policyContext}.`
           : limit ? `Policy limit: ${limit.text}.` : '';
         const eligibleHelper = eligibleAmount == null ? '' : `Eligible amount: ${money(eligibleAmount)}.`;
         if (idef.compute === 'fuelKm') {
@@ -270,8 +280,8 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
       case 'attachment':
         return (
           <div key={key} className="tc-span-all">
-            <FileField label="Bills" multiple files={draft.attachments} required={!idef.attachmentOptional} optional={!!idef.attachmentOptional}
-              helper="Attach one or more bills for this line · PDF, JPG or PNG up to 5 MB each" error={errors.attachment} full testId="line-file"
+            <FileField label="Bills" multiple files={draft.attachments} required={!idef.attachmentOptional && !billUnavailable} optional={!!idef.attachmentOptional || billUnavailable} disabled={billUnavailable}
+              helper={billUnavailable ? 'Bill controls are disabled while Is Bill Available is No.' : 'Attach one or more bills for this line · PDF, JPG or PNG up to 5 MB each'} error={errors.attachment} full testId="line-file"
               placeholder={draft.attachments.length ? 'Add more bills' : 'Upload PDF, JPG or PNG'} onAdd={addFiles}
               onRemove={(i) => setDraft((d) => ({ ...d, attachments: d.attachments.filter((_, j) => j !== i) }))} />
             {ocrNote ? (
@@ -279,14 +289,15 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
                 {ocrNote.status === 'reading' ? 'Reading the bill…' : ocrNote.status === 'done' ? `Read from your bill: ${ocrNote.filled.join(', ')}. Please check ${ocrNote.filled.length === 1 && !ocrNote.filled[0]?.includes('(') ? 'it' : 'them'}.` : ocrNote.status === 'none' ? 'Could not find details on this bill. Please fill them in.' : `${ocrNote.message} Please fill the details in.`}
               </p>
             ) : null}
-            {receiptPicker()}
+            {!billUnavailable ? receiptPicker() : null}
           </div>
         );
       default: {
         const type = fd.type === 'select' ? 'select' : fd.type === 'textarea' ? 'textarea' : fd.type === 'number' ? 'number' : fd.type === 'date' ? 'date' : fd.type === 'time' ? 'time' : 'text';
         return (
           <Field key={key} {...common} type={type} value={val} placeholder={fd.placeholder} helper={fd.helper} step={fd.step} min={fd.min}
-            max={key === 'date' ? today() : undefined} {...(fd.type === 'select' && fd.options ? { options: lookup(fd.options) } : {})}
+            disabled={billUnavailable && (key === 'billerName' || key === 'billNumber')}
+            max={key === 'date' ? today() : undefined} {...(fd.type === 'select' && key === 'isBillAvailable' ? { options: lookup('BILL_AVAILABILITY') } : fd.type === 'select' && fd.options ? { options: lookup(fd.options) } : {})}
             testId={`line-${key}`} onChange={(v) => set(key, v)} />
         );
       }

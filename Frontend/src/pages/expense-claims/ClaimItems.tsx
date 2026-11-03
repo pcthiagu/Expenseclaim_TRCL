@@ -89,7 +89,7 @@ export interface ClaimItemsProps {
   lineErrors: Record<string, string>;
   total: number;
   approvedTotal: number;
-  eligibilityByLine: ReadonlyMap<string, { limit: number | null; enforceEligibility?: EligibilityEnforcement; locationBased: boolean }>;
+  eligibilityByLine: ReadonlyMap<string, { limit: number | null; enforceEligibility?: EligibilityEnforcement; locationBased: boolean; dynamicLimit?: boolean }>;
   onEdit: (id: string) => void;
   onRemove: (id: string) => void;
   onApproval: (id: string, patch: { approvedAmount?: number | null; approverRemarks?: string }) => void;
@@ -129,9 +129,9 @@ function ItemsTable(p: ClaimItemsProps) {
                   {d.fields.includes(c)
                     ? c === 'amount' && eligibilityWarning
                       ? <span className="tc-over" title="Claimed amount exceeds eligibility" data-testid="eligibility-warning"><Icon name="alert" />{money(it.fields.amount)}</span>
-                      : c === 'amount' && eligibility?.locationBased
+                      : c === 'amount' && eligibility?.dynamicLimit
                         ? money(it.fields.amount)
-                        : c === 'limit' && eligibility?.locationBased
+                        : c === 'limit' && eligibility?.dynamicLimit
                           ? eligibility.limit == null ? <span className="tc-text-secondary">No limit</span> : money(eligibility.limit)
                         : cellValue(d, it, c)
                     : dim}
@@ -184,12 +184,13 @@ function ItemCards(p: ClaimItemsProps) {
         const f = it.fields;
         const eligibility = p.eligibilityByLine.get(it.id);
         const eligibilityWarning = eligibility?.enforceEligibility === 'N' && eligibility.limit != null && num(f.amount) > eligibility.limit;
-        const over = eligibility?.locationBased ? 0 : overLimit(d, f);
-        const la = eligibility?.locationBased ? eligibility.limit : lineLimitAmount(d, f);
+        const over = eligibility?.dynamicLimit ? 0 : overLimit(d, f);
+        const la = eligibility?.dynamicLimit ? eligibility.limit : lineLimitAmount(d, f);
         const facts: Array<[string, string]> = [];
         if (f.date) facts.push(['Date', date(String(f.date)) + (f.time ? ', ' + time(String(f.time)) : '')]);
         if (f.fromDate) facts.push(['Period', date(String(f.fromDate)) + (f.fromTime ? ' ' + time(String(f.fromTime)) : '') + ' – ' + date(String(f.toDate)) + (f.toTime ? ' ' + time(String(f.toTime)) : '')]);
         if (f.stayLocation) facts.push(['Stay location', String(f.stayLocation)]);
+        if (f.isBillAvailable) facts.push(['Is Bill Available', String(f.isBillAvailable)]);
         if (f.fromLocation || f.toLocation) facts.push(['Route', dash(f.fromLocation) + ' → ' + dash(f.toLocation)]);
         if (f.modeOfTravel) facts.push(['Mode', String(f.modeOfTravel)]);
         if (f.billerName) facts.push(['Biller', String(f.billerName)]);

@@ -1,8 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { loadReferenceSchema } from './helpers/referenceData.ts';
+import { buildReferenceData, loadReferenceSchema } from './helpers/referenceData.ts';
+import { setReferenceData } from '../src/domain/expenseSchema.ts';
 import { SEED_RECEIPTS, SEED_RECORDS } from './helpers/engine/engineSeed.ts';
-import { EXPENSE_TYPES, fixedItems, itemByKey } from '../src/domain/expenseSchema.ts';
+import { EXPENSE_TYPES, fixedItems, itemByKey, normalizeBillAvailability, withBillAvailabilityDefault } from '../src/domain/expenseSchema.ts';
 import * as calc from '../src/domain/calc.ts';
 import * as wf from '../src/domain/workflow.ts';
 import * as val from '../src/domain/validation.ts';
@@ -90,6 +91,38 @@ test('line eligibility is enforced only for Y; N keeps the amount valid for a wa
   assert.equal(enforced.errors.amount, 'Cannot exceed your eligibility of ₹250.00');
   const notEnforced = val.validateLine(expense, 'local', { eligibilityLimit: 250, enforceEligibility: 'N', now: NOW });
   assert.equal(notEnforced.ok, true);
+});
+
+test('bill-unavailable lines can retain disabled bill details without requiring an attachment', () => {
+  assert.equal(normalizeBillAvailability(' no '), 'No');
+  assert.equal(normalizeBillAvailability('YES'), 'Yes');
+  const reference = buildReferenceData();
+  reference.types = reference.types.map((type) => ({
+    ...type,
+    items: type.items.map((item) => item.key === 's_med_lab'
+      ? { ...item, fields: [...item.fields, 'isBillAvailable'] }
+      : item),
+  }));
+  const field = reference.fields.find((row) => row.key === 'isBillAvailable');
+  if (!field) throw new Error('Is Bill Available reference field is missing.');
+  field.required = true;
+  setReferenceData(reference);
+  try {
+    const billAwareItem = itemByKey('medical', 's_med_lab');
+    if (!billAwareItem) throw new Error('Test expense item is missing.');
+    assert.equal(withBillAvailabilityDefault(billAwareItem, {}).isBillAvailable, 'Yes');
+    assert.equal(withBillAvailabilityDefault(billAwareItem, { isBillAvailable: 'No' }).isBillAvailable, 'No');
+    const r = val.validateLine({
+      itemKey: 's_med_lab',
+      fields: { date: '2026-10-01', amount: 100, isBillAvailable: 'No', billerName: 'Saved vendor', billNumber: 'Saved bill' },
+      attachments: [],
+    }, 'medical', { now: NOW });
+    assert.equal(r.ok, true);
+    assert.equal(r.fields.billerName, 'Saved vendor');
+    assert.equal(r.fields.billNumber, 'Saved bill');
+  } finally {
+    loadReferenceSchema();
+  }
 });
 
 test('fill-within-policy-limits caps lines, keeps decided lines, and remarks only when capped', () => {

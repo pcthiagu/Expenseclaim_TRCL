@@ -14,10 +14,20 @@ let loaded = false;
 export const isReferenceDataLoaded = (): boolean => loaded;
 /** An option list from the database (MODES, CITIES, TRAVEL_PURPOSE, ESTIMATE_ITEM, COST_CENTRE); empty when the list does not exist. */
 export const lookup = (key: string): readonly string[] => LOOKUPS[key] ?? [];
+export function normalizeBillAvailability(value: unknown): 'Yes' | 'No' | undefined {
+  const normalized = String(value ?? '').trim().toLowerCase();
+  if (normalized === 'yes') return 'Yes';
+  if (normalized === 'no') return 'No';
+  return undefined;
+}
+export function withBillAvailabilityDefault(item: ExpenseItemDef, fields: LineFields): LineFields {
+  if (!item.fields.includes('isBillAvailable')) return fields;
+  return { ...fields, isBillAvailable: normalizeBillAvailability(fields.isBillAvailable) ?? 'Yes' };
+}
 
 /** The field keys the app knows how to draw. The DATABASE defines labels, rules and which items use which fields; a new key needs a screen change. */
 export const KNOWN_FIELD_KEYS: readonly FieldKey[] = [
-  'date', 'fromDate', 'toDate', 'fromTime', 'toTime', 'time', 'modeOfTravel', 'stayLocation', 'fromLocation', 'toLocation', 'billerName', 'billNumber',
+  'date', 'fromDate', 'toDate', 'fromTime', 'toTime', 'time', 'modeOfTravel', 'stayLocation', 'fromLocation', 'toLocation', 'billerName', 'billNumber', 'isBillAvailable',
   'fromKm', 'toKm', 'totalKm', 'nonAccountableKm', 'qty', 'amount', 'limit', 'remarks', 'alongWith', 'attachment',
 ];
 
@@ -73,7 +83,7 @@ export function setReferenceData(data: ReferenceData): void {
 
 /** Column order for the desktop line-item grid (Screen Layout – Desktop). */
 export const GRID_COLUMNS: readonly FieldKey[] = [
-  'date', 'billerName', 'billNumber', 'amount', 'qty', 'limit', 'remarks', 'attachment',
+  'date', 'isBillAvailable', 'billerName', 'billNumber', 'amount', 'qty', 'limit', 'remarks', 'attachment',
   'fromLocation', 'toLocation', 'stayLocation', 'modeOfTravel',
   'fromDate', 'toDate', 'fromTime', 'toTime',
   'fromKm', 'toKm', 'totalKm', 'nonAccountableKm', 'alongWith',

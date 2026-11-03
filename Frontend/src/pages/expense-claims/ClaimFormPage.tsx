@@ -23,6 +23,9 @@ import { pendingReceipts as pendingList } from '../../domain/receipts';
 import { Icon } from '../../components/common/Icon';
 import { FileChip } from '../../components/common/ui';
 
+import { authStore } from '../../auth/authStore';
+import { readAppConfig } from '../../config/appConfig';
+
 const uid = (): string => (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8));
 const clone = <T,>(x: T): T => JSON.parse(JSON.stringify(x)) as T;
 
@@ -31,6 +34,64 @@ type Load = 'loading' | 'ready' | 'notfound' | 'error';
 export function ClaimFormPage({ id }: { id: string | null }) {
   const { gateway, session, actor, isAdmin, policy } = useApp();
   const toast = useToast();
+
+  // for pdf preview
+const previewPdf = async (): Promise<void> => {
+  const requestNumber = form?.requestNumber?.trim();
+  if (!requestNumber) {
+    toast('Request number is not available.', 'warning');
+    return;
+  }
+  const token = authStore.getAccessToken();
+  if (!token) {
+    toast('Authentication failed. Please sign in again.', 'error');
+    return;
+  }
+  // Open synchronously during the click to avoid popup blockers.
+  const pdfWindow = window.open(
+    '',
+    '_blank',
+    'width=950,height=800,resizable=yes,scrollbars=yes',
+  );
+  if (!pdfWindow) {
+    toast('Please allow pop-ups to preview the PDF.', 'warning');
+    return;
+  }
+  try {
+    const { apiBaseUrl } = readAppConfig(import.meta.env);
+    const response = await fetch(
+      `${apiBaseUrl}/api/approval-pdf/view?requestNumber=${encodeURIComponent(requestNumber)}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/pdf',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    if (!response.ok) {
+      throw new Error(
+        response.status === 401
+          ? 'Authentication failed. Please sign in again.'
+          : response.status === 404
+            ? 'PDF not found for this request.'
+            : `Unable to preview PDF (HTTP ${response.status}).`,
+      );
+    }
+    const blob = await response.blob();
+    const pdfUrl = URL.createObjectURL(blob);
+    pdfWindow.location.href = pdfUrl;
+    pdfWindow.focus();
+    window.setTimeout(() => URL.revokeObjectURL(pdfUrl), 5 * 60 * 1000);
+  } catch (error) {
+    pdfWindow.close();
+    toast(
+      error instanceof Error ? error.message : 'Unable to preview PDF.',
+      'error',
+    );
+  }
+};
+
   const modal = useModal();
   const [load, setLoad] = useState<Load>('loading');
   const [loadError, setLoadError] = useState('');
@@ -40,7 +101,7 @@ export function ClaimFormPage({ id }: { id: string | null }) {
   const [lineErrors, setLineErrors] = useState<Record<string, string>>({});
   const [summary, setSummary] = useState<string[]>([]);
   const [records, setRecords] = useState<TravelClaimRecord[] | null>(null);
-  const [eligibilityByLine, setEligibilityByLine] = useState<ReadonlyMap<string, { limit: number | null; enforceEligibility?: 'Y' | 'N'; locationBased: boolean }>>(() => new Map());
+  const [eligibilityByLine, setEligibilityByLine] = useState<ReadonlyMap<string, { limit: number | null; enforceEligibility?: 'Y' | 'N'; locationBased: boolean; dynamicLimit: boolean }>>(() => new Map());
   const [eligibilityWarningError, setEligibilityWarningError] = useState('');
   const [busy, setBusy] = useState(false);
   const lock = useRef(false);
@@ -101,14 +162,19 @@ export function ClaimFormPage({ id }: { id: string | null }) {
     setEligibilityWarningError('');
     void Promise.all(form.items.map(async (line) => {
       const item = itemByKey(form.expenseType, line.itemKey);
-      if (!item) return { id: line.id, limit: null, enforceEligibility: undefined, locationBased: false, error: null };
+      if (!item) return { id: line.id, limit: null, enforceEligibility: undefined, locationBased: false, dynamicLimit: false, error: null };
       let eligibleItem = item;
       const locationBased = item.fields.includes('stayLocation');
+      const billAvailable = item.fields.includes('isBillAvailable')
+        && (line.fields.isBillAvailable === 'Yes' || line.fields.isBillAvailable === 'No')
+        ? line.fields.isBillAvailable
+        : undefined;
+      const dynamicLimit = (locationBased && !!String(line.fields.stayLocation ?? '').trim()) || !!billAvailable;
       if (locationBased) {
         const stayLocation = String(line.fields.stayLocation ?? '').trim();
-        if (!stayLocation) return { id: line.id, limit: null, enforceEligibility: item.enforceEligibility, locationBased, error: null };
+        if (!stayLocation && !billAvailable) return { id: line.id, limit: null, enforceEligibility: item.enforceEligibility, locationBased, dynamicLimit: false, error: null };
         try {
-          const locationLimit = await gateway.getLocationPolicyLimit(item.key, stayLocation);
+          const locationLimit = await gateway.getLocationPolicyLimit(item.key, stayLocation, billAvailable);
           eligibleItem = {
             ...item,
             limit: locationLimit?.limit ?? null,
@@ -116,7 +182,19 @@ export function ClaimFormPage({ id }: { id: string | null }) {
             enforceEligibility: locationLimit?.enforceEligibility ?? item.enforceEligibility,
           };
         } catch (e) {
-          return { id: line.id, limit: null, enforceEligibility: undefined, locationBased, error: e instanceof Error ? e.message : 'Could not load a location eligibility limit.' };
+          return { id: line.id, limit: null, enforceEligibility: undefined, locationBased, dynamicLimit, error: e instanceof Error ? e.message : 'Could not load an eligibility limit.' };
+        }
+      } else if (billAvailable) {
+        try {
+          const billLimit = await gateway.getLocationPolicyLimit(item.key, '', billAvailable);
+          eligibleItem = {
+            ...item,
+            limit: billLimit?.limit ?? null,
+            limitPer: billLimit?.limitPer ?? item.limitPer,
+            enforceEligibility: billLimit?.enforceEligibility ?? item.enforceEligibility,
+          };
+        } catch (e) {
+          return { id: line.id, limit: null, enforceEligibility: undefined, locationBased, dynamicLimit, error: e instanceof Error ? e.message : 'Could not load a bill eligibility limit.' };
         }
       }
       return {
@@ -124,13 +202,14 @@ export function ClaimFormPage({ id }: { id: string | null }) {
         limit: lineLimitAmount(eligibleItem, line.fields),
         enforceEligibility: eligibleItem.enforceEligibility,
         locationBased,
+        dynamicLimit,
         error: null,
       };
     })).then((results) => {
       if (cancelled) return;
-      setEligibilityByLine(new Map(results.map(({ id, limit, enforceEligibility, locationBased }) => [id, { limit, enforceEligibility, locationBased }])));
+      setEligibilityByLine(new Map(results.map(({ id, limit, enforceEligibility, locationBased, dynamicLimit }) => [id, { limit, enforceEligibility, locationBased, dynamicLimit }])));
       const errors = results.flatMap((r) => r.error ? [r.error] : []);
-      if (errors.length) setEligibilityWarningError(`Could not check location eligibility: ${errors[0]}`);
+      if (errors.length) setEligibilityWarningError(`Could not check eligibility: ${errors[0]}`);
     });
     return () => { cancelled = true; };
   }, [gateway, form?.expenseType, form?.items]);
@@ -469,7 +548,19 @@ export function ClaimFormPage({ id }: { id: string | null }) {
 
       <div className="tc-actionbar" ref={barRef}>
         <div className="tc-actionbar__group">
-          {form.requestNumber ? <Button variant="ghost" className="tc-btn--neutral" icon="print" label="Download as PDF" hook="print" onClick={() => window.print()} /> : null}
+          {/* {form.requestNumber ? <Button variant="ghost" className="tc-btn--neutral" icon="print" label="Download as PDF" hook="print" onClick={() => window.print()} /> : null} */}
+
+          {form.requestNumber ? (
+          <Button
+            variant="ghost"
+            // className="tc-btn--neutral"
+            icon="file-text"
+            label="Download as PDF"
+            onClick={() => void previewPdf()}
+            disabled={busy}
+          />
+        ) : null}
+        
         </div>
         <span className="tc-actionbar__meta" data-testid="meta">{editable ? (dirty ? 'Unsaved changes' : isNew ? 'Not saved yet' : `Saved ${dateTime(form.updatedAt)}`) : `${plural(form.items.length, 'line')} · ${money(total)}`}</span>
         <span className="tc-actionbar__spacer" />

@@ -17,7 +17,7 @@ export type ColourFamily = 'orange' | 'bluelight' | 'freshgreen' | 'turquoise' |
 export type FieldKey =
   | 'date' | 'fromDate' | 'toDate' | 'fromTime' | 'toTime' | 'time'
   | 'modeOfTravel' | 'stayLocation' | 'fromLocation' | 'toLocation'
-  | 'billerName' | 'billNumber'
+  | 'billerName' | 'billNumber' | 'isBillAvailable'
   | 'fromKm' | 'toKm' | 'totalKm' | 'nonAccountableKm' | 'qty'
   | 'amount' | 'limit' | 'remarks' | 'alongWith' | 'attachment';
 
@@ -116,6 +116,8 @@ export interface BaseRecord {
   submittedOn: string | null;
   approvedOn: string | null;
   approver: string | null;
+  /** Multi-level workflow: 'Level 2 - I00456' while pending, 'Authorized' when approved, 'Rejected' when rejected (null for drafts). */
+  currentApprovalLevel?: string | null;
   createdBy?: string;
   createdAt: string;
   updatedAt: string;
@@ -239,7 +241,7 @@ export interface ReferenceData {
 
 /** One step of a request's approval trail (TA_usp_GetApprovalTrail). */
 export interface TrailEvent {
-  action: 'Created' | 'Submitted' | 'Approved' | 'Rejected' | 'Copied';
+  action: 'Created' | 'Submitted' | 'LevelApproved' | 'Approved' | 'Rejected' | 'Copied';
   actedBy: string;
   actedByName: string | null;
   actedAt: string;

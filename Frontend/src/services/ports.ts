@@ -71,7 +71,7 @@ export interface TravelClaimGateway {
   setViewMode?(mode: Role): void;
   getPolicy(): Promise<PolicySnapshot | null>;
   /** Location-specific item ceiling from TA_usp_GetLocationPolicyLimit. */
-  getLocationPolicyLimit(itemKey: string, stayLocation: string): Promise<LocationPolicyLimit | null>;
+  getLocationPolicyLimit(itemKey: string, stayLocation: string, billAvailable?: 'Yes' | 'No'): Promise<LocationPolicyLimit | null>;
   /** Field definitions, expense types, items and option lists: the screens contain none of these. */
   getReferenceData(): Promise<ReferenceData>;
   /** Who created, submitted and decided the request, with the decision text. */

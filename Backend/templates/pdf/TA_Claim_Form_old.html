@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Travel Allowance Claim Form</title>
+<style>
+  @page { size: A4; margin: 12mm 10mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 9px; color: #202b38; margin: 0; }
+  .header { display:flex; align-items:center; gap:12px; border-bottom:2px solid #24496b; padding-bottom:8px; margin-bottom:10px; }
+  .logo { width:68px; max-height:52px; object-fit:contain; }
+  .company { flex:1; text-align:center; font-size:13px; font-weight:bold; color:#24496b; }
+  h1 { font-size:15px; text-align:center; margin:8px 0 12px; color:#24496b; letter-spacing:.4px; }
+  h2 { font-size:10px; background:#eaf0f5; border:1px solid #b9c8d6; padding:6px 7px; margin:10px 0 0; color:#24496b; }
+  table { width:100%; border-collapse:collapse; table-layout:fixed; }
+  th, td { border:1px solid #b9c4ce; padding:5px; vertical-align:top; overflow-wrap:anywhere; }
+  th { background:#f2f5f8; font-weight:bold; text-align:left; }
+  .meta td { width:50%; }
+  .label { color:#536475; font-weight:bold; display:inline-block; min-width:100px; }
+  .value { color:#17212b; }
+  .grid td { width:25%; }
+  .expenses { font-size:7px; }
+  .expenses th, .expenses td { padding:4px 3px; text-align:center; }
+  .expenses th { vertical-align:middle; }
+  .right { text-align:right !important; }
+  .total { font-weight:bold; background:#f4f7fa; }
+  .summary { width:60%; margin-left:auto; }
+  .summary td:last-child { text-align:right; font-weight:bold; }
+  .muted { color:#667788; }
+  .footer { border-top:1px solid #b9c4ce; margin-top:12px; padding-top:5px; text-align:center; font-size:8px; color:#667788; }
+  .no-data { color:#667788; font-style:italic; }
+  .keep { page-break-inside:avoid; }
+</style>
+</head>
+<body>
+<div class="header">
+  <img class="logo" src="./logo.png" alt="Company logo">
+  <div class="company">RAMCO INDUSTRIAL AND TECHNOLOGY SERVICES LIMITED</div>
+</div>
+<h1>TRAVEL ALLOWANCE (TA) CLAIM FORM</h1>
+<table class="meta">
+  <tr>
+    <td><span class="label">Claim No.:</span> <span class="value">{{claimNo}}</span></td>
+    <td><span class="label">Date of Submission:</span> <span class="value">{{submissionDate}}</span></td>
+  </tr>
+</table>
+
+<h2>1. EMPLOYEE DETAILS</h2>
+<table class="grid">
+  <tr><td><span class="label">Employee Code</span><br>{{employeeCode}}</td><td><span class="label">Employee Name</span><br>{{employeeName}}</td><td><span class="label">Department</span><br>{{department}}</td><td><span class="label">Designation</span><br>{{designation}}</td></tr>
+  <tr><td><span class="label">Reporting Manager</span><br>{{reportingManager}}</td><td><span class="label">Project</span><br>{{project}}</td><td><span class="label">Email</span><br>{{email}}</td><td><span class="label">Mobile No.</span><br>{{mobileNo}}</td></tr>
+  <tr><td><span class="label">Grade</span><br>{{grade}}</td><td><span class="label">Bank Name</span><br>{{bankName}}</td><td colspan="2"><span class="label">Account Number</span><br>{{accountNumber}} &nbsp; <span class="label">IFSC Code</span> {{ifscCode}}</td></tr>
+</table>
+
+<h2>2. TRAVEL DETAILS</h2>
+<table class="grid">
+  <tr><td colspan="2"><span class="label">Purpose of Travel</span><br>{{purposeOfTravel}}</td><td><span class="label">Travel From (Date)</span><br>{{travelFromDate}}</td><td><span class="label">Travel To (Date)</span><br>{{travelToDate}}</td></tr>
+  <tr><td><span class="label">From Location</span><br>{{fromLocation}}</td><td><span class="label">To Location</span><br>{{toLocation}}</td><td colspan="2"><span class="label">Advance Amount</span><br>{{advanceAmount}}</td></tr>
+</table>
+
+<h2>3. EXPENSE DETAILS</h2>
+<table class="expenses">
+  <thead><tr>
+    <th>Sl. No</th><th>Date</th><th>Departure Time</th><th>Arrival Time</th><th>Mode of Travel</th><th>Boarding Category</th><th>Mode of Conveyance</th><th>Fare (Rail/Bus/Air)</th><th>Lodging</th><th>Boarding</th><th>Local Conveyance</th><th>Other Expenses</th><th>Total</th><th>Bill Attached (Y/N)</th><th>Remarks</th>
+  </tr></thead>
+  <tbody>
+  {{#each expenses}}
+    <tr><td>{{slNo}}</td><td>{{date}}</td><td>{{departureTime}}</td><td>{{arrivalTime}}</td><td>{{modeOfTravel}}</td><td>{{boardingCategory}}</td><td>{{modeOfConveyance}}</td><td class="right">{{fare}}</td><td class="right">{{lodging}}</td><td class="right">{{boarding}}</td><td class="right">{{localConveyance}}</td><td class="right">{{otherExpenses}}</td><td class="right">{{total}}</td><td>{{billAttached}}</td><td>{{remarks}}</td></tr>
+  {{else}}
+    <tr><td colspan="15" class="no-data">No expense line items returned.</td></tr>
+  {{/each}}
+  <tr class="total"><td colspan="7">TOTAL</td><td class="right">{{fareTotal}}</td><td class="right">{{lodgingTotal}}</td><td class="right">{{boardingTotal}}</td><td class="right">{{localConveyanceTotal}}</td><td class="right">{{otherExpensesTotal}}</td><td class="right">{{totalExpenses}}</td><td colspan="2"></td></tr>
+  </tbody>
+</table>
+
+<h2>4. SUPPORTING DOCUMENTS ATTACHED (Y/N)</h2>
+<table class="grid">
+  <tr><td><span class="label">Ticket / Boarding Pass</span><br>{{ticketBoardingPassAttached}}</td><td><span class="label">Hotel Invoice</span><br>{{hotelInvoiceAttached}}</td><td><span class="label">Conveyance Receipts</span><br>{{conveyanceReceiptsAttached}}</td><td><span class="label">Other Bills / Receipts</span><br>{{otherBillsReceiptsAttached}}</td></tr>
+</table>
+
+<h2>5. CLAIM SUMMARY</h2>
+<table class="summary">
+  <tr><td>Total Expenses</td><td>{{totalExpenses}}</td></tr>
+  <tr><td>Less: Advance Taken</td><td>{{advanceAmount}}</td></tr>
+  <tr class="total"><td>Net Payable / (Refundable)</td><td>{{netPayableRefundable}}</td></tr>
+</table>
+
+<h2>6. APPROVAL WORKFLOW</h2>
+<table>
+  <thead><tr><th style="width:8%">Level</th><th style="width:25%">User</th><th style="width:25%">Date &amp; Time</th><th style="width:17%">Status</th><th>Remarks</th></tr></thead>
+  <tbody>
+  {{#each approvalTrail}}
+    <tr><td>{{level}}</td><td>{{actedByName}}{{#if actedBy}} ({{actedBy}}){{/if}}</td><td>{{actedAt}}</td><td>{{action}}</td><td>{{details}}</td></tr>
+  {{else}}
+    <tr><td colspan="5" class="no-data">No approval actions returned.</td></tr>
+  {{/each}}
+  </tbody>
+</table>
+<div class="footer">Travel Allowance Claim Form · Generated from the Travel Allowance system</div>
+</body>
+</html>

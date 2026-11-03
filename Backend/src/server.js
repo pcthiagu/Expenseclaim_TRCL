@@ -105,48 +105,113 @@ app.get("/api/attachment/view/:docType/:fileName",checkAuth, (req, res) => {
   }
 });
 
-app.get("/api/approval-pdf/view/:transaction", checkAuth, (req, res) => {
-    try {
-      const rootFolder =
-        process.env.GENERATED_PDF_ROOT ||
-        "D:\\hrms-approval-updated_latest\\server\\storage\\generated-pdfs";
+// app.get("/api/approval-pdf/view/:transaction", checkAuth, (req, res) => {
+//     try {
+//       const rootFolder =
+//         process.env.GENERATED_PDF_ROOT ||
+//         "D:\\hrms-approval-updated_latest\\server\\storage\\generated-pdfs";
 
-      // Transaction:
-      // GEN/000223/26-27
-      //
-      // Filename:
-      // GEN_000223_26-27.pdf
-      const transaction = req.params.transaction;
+//       // Transaction:
+//       // GEN/000223/26-27
+//       //
+//       // Filename:
+//       // GEN_000223_26-27.pdf
+//       const transaction = req.params.transaction;
 
-      const fileName =
-        transaction.replace(/\//g, "_") + ".pdf";
+//       const fileName =
+//         transaction.replace(/\//g, "_") + ".pdf";
 
-      const fullPath = path.join(rootFolder, fileName);
+//       const fullPath = path.join(rootFolder, fileName);
 
-      // console.log("Transaction:", transaction);
-      // console.log("PDF filename:", fileName);
-      // console.log("PDF path:", fullPath);
+//       // console.log("Transaction:", transaction);
+//       // console.log("PDF filename:", fileName);
+//       // console.log("PDF path:", fullPath);
 
-      if (!fs.existsSync(fullPath)) {
-        console.log("PDF NOT FOUND:", fullPath);
+//       if (!fs.existsSync(fullPath)) {
+//         console.log("PDF NOT FOUND:", fullPath);
 
-        return res.status(404).json({
-          success: false,
-          message: "PDF not found",
-        });
-      }
+//         return res.status(404).json({
+//           success: false,
+//           message: "PDF not found",
+//         });
+//       }
 
-      return res.sendFile(fullPath);
-    } catch (err) {
-      console.error("Approval PDF preview error:", err);
+//       return res.sendFile(fullPath);
+//     } catch (err) {
+//       console.error("Approval PDF preview error:", err);
 
-      return res.status(500).json({
+//       return res.status(500).json({
+//         success: false,
+//         message: "Unable to preview approval PDF",
+//       });
+//     }
+//   }
+// );
+
+// For TA module pdf preview 
+
+app.get("/api/approval-pdf/view", checkAuth, (req, res) => {
+  try {
+    const rootFolder =
+      process.env.GENERATED_PDF_ROOT ||"D:\\app_projects\\expense_new\\Backend\\storage\\generated-pdfs";
+      // "D:\\Development_projects\\TA_Development\\storage\\generated-pdfs";
+      
+    const requestNumber = String(req.query.requestNumber || "").trim();
+
+    if (!requestNumber || !/^[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*$/.test(requestNumber)) {
+      return res.status(400).json({
         success: false,
-        message: "Unable to preview approval PDF",
+        message: "Invalid request number",
       });
     }
+
+
+    // M08280/2026/0001 -> M08280_2026_0001.pdf
+    const fileName = requestNumber.replace(/\//g, "_") + ".pdf";
+    const rootPath = path.resolve(rootFolder);
+    const fullPath = path.resolve(rootPath, fileName);
+
+    console.log(requestNumber,fileName)
+
+    // Ensure the resolved file stays inside the generated-pdfs folder.
+    if (path.dirname(fullPath) !== rootPath) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid file path",
+      });
+    }
+
+    if (!fs.existsSync(fullPath) || !fs.statSync(fullPath).isFile()) {
+      return res.status(404).json({
+        success: false,
+        message: `PDF not found for request ${requestNumber}`,
+      });
+    }
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename="${fileName}"`
+    );
+
+    return res.sendFile(fullPath, (err) => {
+      if (err && !res.headersSent) {
+        console.error("PDF preview error:", err);
+        res.status(500).json({
+          success: false,
+          message: "Unable to preview PDF",
+        });
+      }
+    });
+  } catch (err) {
+    console.error("Approval PDF preview error:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to preview approval PDF",
+    });
   }
-);
+});
 
 // All other data traffic goes through this single, auth-protected endpoint.
 app.use("/api", checkAuth, executeRoute);

@@ -1,7 +1,7 @@
 import type { PolicyConfig } from '../config/policy';
 import { DEFAULT_POLICY } from '../config/policy';
 import { applyFuel, claimTotal, itemAmount, medicalUsage, advanceUsage, travelEstimate } from '../domain/calc';
-import { FIELD_DEFS, itemByKey, typeByKey } from '../domain/expenseSchema';
+import { FIELD_DEFS, itemByKey, normalizeBillAvailability, typeByKey } from '../domain/expenseSchema';
 import type {
   AdvanceRequest, ClaimLine, EligibilityEnforcement, ExpenseClaim, ExpenseItemDef, TravelClaimRecord, TravelRequest,
 } from '../types/domain';
@@ -84,9 +84,11 @@ export function validateLine(
     return { errors, summary: ['Expense Item: choose an item'], ok: false, fields: line.fields };
   }
   const f = d.compute === 'fuelKm' ? applyFuel(d, line.fields, opts.policy) : { ...line.fields };
+  const billUnavailable = normalizeBillAvailability(f.isBillAvailable) === 'No';
   for (const key of d.fields) {
     const fd = FIELD_DEFS[key];
     if (!fd || fd.computed || key === 'attachment') continue;
+    if (billUnavailable && (key === 'billerName' || key === 'billNumber')) continue;
     const v = f[key];
     const empty = v === undefined || v === null || v === '' || (typeof v === 'string' && !v.trim());
     if (fd.required && empty) errors[key] = 'Required';
@@ -105,7 +107,7 @@ export function validateLine(
   if (f.fromDate && f.toDate && f.toDate < f.fromDate) errors.toDate = 'Must be on or after From Date';
   if (f.fromDate && f.toDate && f.fromDate === f.toDate && f.fromTime && f.toTime && f.toTime <= f.fromTime) errors.toTime = 'Must be after From Time';
   if (f.date && String(f.date) > today(now)) errors.date = 'Cannot be in the future';
-  if (d.fields.includes('attachment') && !d.attachmentOptional && !line.attachments.length) errors.attachment = 'Attach at least one bill';
+  if (d.fields.includes('attachment') && !d.attachmentOptional && !billUnavailable && !line.attachments.length) errors.attachment = 'Attach at least one bill';
   const labels: Record<string, string> = {};
   for (const k of Object.keys(errors)) labels[k] = k === 'attachment' ? 'Bills' : (FIELD_DEFS[k as keyof typeof FIELD_DEFS]?.label ?? k);
   const r = result(errors, [], labels);

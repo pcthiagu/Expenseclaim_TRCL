@@ -95,10 +95,14 @@ test('listRecords falls back to rows.length when the SP omits a total; policy nu
   assert.deepEqual([p?.policy.medicalAnnualLimit, p?.policy.advanceLimit], [20000, 15000]);
 });
 
-test('location policy limit calls its SP with the item and selected stay location', async () => {
+test('location policy limit calls its SP with item, optional stay location, and optional bill availability', async () => {
   const { g, calls } = setup((sp) => sp === SP.getLocationPolicyLimit ? { limit: 4500, limitPer: 'night', enforceEligibility: 'Y' } : {});
   assert.deepEqual(await g.getLocationPolicyLimit('o_lodge', 'Mumbai'), { limit: 4500, limitPer: 'night', enforceEligibility: 'Y' });
-  assert.deepEqual(calls, [{ sp: SP.getLocationPolicyLimit, params: { ItemKey: 'o_lodge', StayLocation: 'Mumbai' } }]);
+  assert.deepEqual(await g.getLocationPolicyLimit('l_food_dinner', '', 'No'), { limit: 4500, limitPer: 'night', enforceEligibility: 'Y' });
+  assert.deepEqual(calls, [
+    { sp: SP.getLocationPolicyLimit, params: { ItemKey: 'o_lodge', StayLocation: 'Mumbai' } },
+    { sp: SP.getLocationPolicyLimit, params: { ItemKey: 'l_food_dinner', IsBillAvailable: 'No' } },
+  ]);
   assert.equal(await setup(() => null).g.getLocationPolicyLimit('o_lodge', 'Mumbai'), null);
   assert.deepEqual(await setup((sp) => sp === SP.getLocationPolicyLimit ? { limit: 4500, EnforceEligibility: 'n' } : {}).g.getLocationPolicyLimit('o_lodge', 'Mumbai'),
     { limit: 4500, limitPer: null, enforceEligibility: 'N' });

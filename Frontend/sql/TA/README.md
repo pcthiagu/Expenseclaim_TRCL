@@ -2,7 +2,7 @@
 
 Tables, functions and the procedures the app calls (plus `TA_usp_CanViewAttachment` for the file route and one internal helper). Generated from the screens and the contract in `docs/05-sp-contract.md`.
 
-`TA_usp_GetLocationPolicyLimit` is installed as a compile-ready stub. It currently returns a null limit; replace its final SELECT in `04_procs_session_files.sql` with the approved location policy lookup when ready.
+`TA_usp_GetLocationPolicyLimit` is installed as a compile-ready stub. It accepts `ItemKey`, an optional `StayLocation`, and an optional `IsBillAvailable` (`Yes`/`No`); at least one of the latter two is required. It currently returns a null limit and the item's `EnforceEligibility` flag; replace the limit lookup in `04_procs_session_files.sql` with the approved location/bill-availability policy lookup when ready.
 
 > **Status: written but NEVER EXECUTED.** There was no SQL Server where this was authored. What was done: a static checker (`npm run sql:lint`: balanced blocks/quotes/parentheses, CREATE-first-in-batch, every referenced object and `alias.Column` exists), a contract test (`tests/sqlContract.test.ts`: names, JSON keys, reference data, required server-side rules) and a smoke-test script. **Run `99_smoke_test.sql` on a development database first and expect to fix some syntax or logic slips.**
 
@@ -36,6 +36,8 @@ All files are re-runnable (or run `install_all.sqlcmd.sql` in SQLCMD mode). Each
 
 ## Reference data and the approval trail
 Expense types, items, field definitions and option lists are rows (`TA_FieldDef`, `TA_ExpenseType`, `TA_ExpenseItem`, `TA_Lookup`) read by `TA_usp_GetReferenceData`; the approval trail is `TA_usp_GetApprovalTrail`. See `docs/09-reference-data-and-trail.md`.
+
+For each expense item that needs the bill-availability choice, add `"isBillAvailable"` to its JSON `TA_ExpenseItem.FieldList`. The `TA_FieldDef` and Yes/No options are seeded by `02_seed_reference.sql`.
 
 ## How it works (short)
 - Caller = `ExecutedBy` (set by the server from the token). The browser's role, employee code, status, number, approver and approved amounts are never trusted.

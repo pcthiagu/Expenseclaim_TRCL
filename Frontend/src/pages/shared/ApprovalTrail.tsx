@@ -8,8 +8,8 @@ import type { RequestStatus, Role, TrailEvent, TravelClaimRecord } from '../../t
 import { date, dateTime, waiting } from '../../utils/format';
 
 /** One short line for the Status column: where the request stands and who decided it. Null for drafts (nothing to say yet). */
-export function trailSummary(r: Pick<TravelClaimRecord, 'status' | 'submittedOn' | 'approvedOn' | 'approver'>, now: Date = new Date()): string | null {
-  if (r.status === 'submitted') { const w = waiting(r.submittedOn, now); return `Awaiting approval · ${w === 'Today' ? 'since today' : w}`; }
+export function trailSummary(r: Pick<TravelClaimRecord, 'status' | 'submittedOn' | 'approvedOn' | 'approver'> & { currentApprovalLevel?: string | null }, now: Date = new Date()): string | null {
+  if (r.status === 'submitted') { const w = waiting(r.submittedOn, now); return `${r.currentApprovalLevel ? `Awaiting ${r.currentApprovalLevel}` : 'Awaiting approval'} · ${w === 'Today' ? 'since today' : w}`; }
   if (r.status === 'approved' || r.status === 'rejected') return `${r.approver ? `by ${r.approver}` : 'decided'}${r.approvedOn ? ` · ${date(r.approvedOn)}` : ''}`;
   return null;
 }
@@ -17,6 +17,7 @@ export function trailSummary(r: Pick<TravelClaimRecord, 'status' | 'submittedOn'
 const VERB: Record<TrailEvent['action'], { label: string; icon: string; tone: 'neutral' | 'info' | 'success' | 'error' }> = {
   Created: { label: 'Created', icon: 'edit', tone: 'neutral' },
   Submitted: { label: 'Submitted for approval', icon: 'send', tone: 'info' },
+  LevelApproved: { label: 'Level approved', icon: 'check-circle', tone: 'success' },
   Approved: { label: 'Approved', icon: 'check-circle', tone: 'success' },
   Rejected: { label: 'Rejected', icon: 'x-circle', tone: 'error' },
   Copied: { label: 'Copied from a rejected claim', icon: 'copy', tone: 'neutral' },
@@ -54,9 +55,9 @@ export function ApprovalTrailBody({ record, role }: { record: TravelClaimRecord;
                 <Icon name={v.icon} />{!last ? <span style={{ flex: 1, width: 2, background: 'var(--nb-border)', marginTop: 4 }} /> : null}
               </span>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontWeight: 600 }}>{v.label}</div>
+                <div style={{ fontWeight: 600 }}>{e.action === 'LevelApproved' && e.details ? e.details : v.label}</div>
                 <div className="tc-text-secondary" style={{ fontSize: 13 }}>{e.actedByName ?? e.actedBy}{e.actedByName ? ` · ${e.actedBy}` : ''} · {dateTime(e.actedAt)}</div>
-                {e.details ? <div style={{ marginTop: 4, fontSize: 13 }}><span className="tc-text-secondary">{label}: </span><span data-testid="trail-details">{e.details}</span></div> : null}
+                {e.details && e.action !== 'LevelApproved' ? <div style={{ marginTop: 4, fontSize: 13 }}><span className="tc-text-secondary">{label}: </span><span data-testid="trail-details">{e.details}</span></div> : null}
               </div>
             </li>
           );
@@ -64,7 +65,7 @@ export function ApprovalTrailBody({ record, role }: { record: TravelClaimRecord;
         {pending ? (
           <li data-testid="trail-pending" style={{ display: 'flex', gap: 12 }}>
             <span aria-hidden="true" style={{ color: 'var(--nb-text-secondary)' }}><Icon name="hourglass" /></span>
-            <div><div style={{ fontWeight: 600 }}>Waiting for an approver</div><div className="tc-text-secondary" style={{ fontSize: 13 }}>Submitted {date(record.submittedOn)} · {waiting(record.submittedOn) === 'Today' ? 'today' : `${waiting(record.submittedOn)} so far`}</div></div>
+            <div><div style={{ fontWeight: 600 }}>{record.currentApprovalLevel ? `Waiting for ${record.currentApprovalLevel}` : 'Waiting for an approver'}</div><div className="tc-text-secondary" style={{ fontSize: 13 }}>Submitted {date(record.submittedOn)} · {waiting(record.submittedOn) === 'Today' ? 'today' : `${waiting(record.submittedOn)} so far`}</div></div>
           </li>
         ) : null}
       </ol>

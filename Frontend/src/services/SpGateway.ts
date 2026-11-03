@@ -90,8 +90,12 @@ export class SpGateway implements TravelClaimGateway {
     return { policy: { ...DEFAULT_POLICY, ...(o.policy ?? {}) } };
   }
 
-  async getLocationPolicyLimit(itemKey: string, stayLocation: string): Promise<LocationPolicyLimit | null> {
-    const d = await this.call(this.SP.getLocationPolicyLimit, { ItemKey: itemKey, StayLocation: stayLocation });
+  async getLocationPolicyLimit(itemKey: string, stayLocation: string, billAvailable?: 'Yes' | 'No'): Promise<LocationPolicyLimit | null> {
+    const d = await this.call(this.SP.getLocationPolicyLimit, {
+      ItemKey: itemKey,
+      ...(stayLocation ? { StayLocation: stayLocation } : {}),
+      ...(billAvailable ? { IsBillAvailable: billAvailable } : {}),
+    });
     if (d == null) return null;
     const o = asObject<{ limit?: unknown; limitPer?: unknown; enforceEligibility?: unknown; EnforceEligibility?: unknown }>(d, 'location policy limit');
     if (o.limit !== null && (typeof o.limit !== 'number' || !Number.isFinite(o.limit) || o.limit < 0)) {
