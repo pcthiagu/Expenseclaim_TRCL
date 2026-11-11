@@ -56,6 +56,21 @@ BEGIN
   DECLARE @itemKey NVARCHAR(30) = NULLIF(LTRIM(RTRIM(JSON_VALUE(@JsonParam, '$.ItemKey'))), N'');
   DECLARE @stayLocation NVARCHAR(100) = NULLIF(LTRIM(RTRIM(JSON_VALUE(@JsonParam, '$.StayLocation'))), N'');
   DECLARE @billAvailable NVARCHAR(3) = NULLIF(LTRIM(RTRIM(JSON_VALUE(@JsonParam, '$.IsBillAvailable'))), N'');
+  DECLARE @alongWithJson NVARCHAR(MAX) = JSON_QUERY(@JsonParam, '$.AlongWith');
+  DECLARE @alongWithCodes TABLE (EmployeeCode NVARCHAR(30) NOT NULL PRIMARY KEY);
+  IF EXISTS (SELECT 1 FROM OPENJSON(@JsonParam) WHERE [key] = N'AlongWith' AND [type] <> 4)
+    THROW 50000, N'[VALIDATION] AlongWith must be an array of employee codes.', 1;
+  IF @alongWithJson IS NOT NULL
+  BEGIN
+    IF EXISTS (SELECT 1 FROM OPENJSON(@alongWithJson) WHERE [type] <> 1 OR NULLIF(LTRIM(RTRIM([value])), N'') IS NULL OR LEN([value]) > 30)
+      THROW 50000, N'[VALIDATION] AlongWith must contain non-empty employee codes of at most 30 characters.', 1;
+    INSERT @alongWithCodes (EmployeeCode)
+    SELECT DISTINCT LTRIM(RTRIM([value])) FROM OPENJSON(@alongWithJson);
+    IF EXISTS (SELECT 1 FROM @alongWithCodes c WHERE NOT EXISTS (
+      SELECT 1 FROM dbo.TA_vw_Employee e WHERE e.EmployeeCode = c.EmployeeCode AND e.IsActive = 1
+    ))
+      THROW 50000, N'[VALIDATION] AlongWith contains an unknown or inactive employee.', 1;
+  END;
   IF @billAvailable IS NOT NULL AND UPPER(@billAvailable) NOT IN (N'YES', N'NO')
     THROW 50000, N'[VALIDATION] Bill availability must be Yes or No.', 1;
   SET @billAvailable = CASE WHEN UPPER(@billAvailable) = N'YES' THEN N'Yes' WHEN UPPER(@billAvailable) = N'NO' THEN N'No' END;
@@ -112,8 +127,8 @@ BEGIN
   SET NOCOUNT ON;
   DECLARE @me NVARCHAR(30) = NULLIF(LTRIM(RTRIM(JSON_VALUE(@JsonParam, '$.ExecutedBy'))), N'');
   IF @me IS NULL THROW 50000, N'[UNAUTHORIZED] Not signed in', 1;
-  DECLARE @asApprover BIT = dbo.TA_fn_ActsAsApprover(@JsonParam);   -- the VIEW this call acts in (see TA_fn_ActsAsApprover)
-  IF @asApprover = 0 THROW 50000, N'[FORBIDDEN] Employee lookup is available to approvers only', 1;
+  IF NOT EXISTS (SELECT 1 FROM dbo.TA_vw_Employee WHERE EmployeeCode = @me AND IsActive = 1)
+    THROW 50000, N'[FORBIDDEN] Your account is not set up for Travel Claim. Contact HR.', 1;
 
   DECLARE @q NVARCHAR(100) = ISNULL(LEFT(LTRIM(RTRIM(JSON_VALUE(@JsonParam, '$.Query'))), 100), N'');
   DECLARE @like NVARCHAR(220) = N'%' + REPLACE(REPLACE(REPLACE(@q, N'[', N'[[]'), N'%', N'[%]'), N'_', N'[_]') + N'%';
@@ -179,8 +194,8 @@ BEGIN
 END
 GO
 
--- Stamp: this script is installed at revision 2026-10-28-b (the app compares it with the revision it expects).
-MERGE dbo.TA_SchemaVersion AS t USING (VALUES (N'04_procs_session_files', N'2026-10-28-b')) AS s (ScriptName, Rev) ON t.ScriptName = s.ScriptName
+-- Stamp: this script is installed at revision 2026-11-12-a (the app compares it with the revision it expects).
+MERGE dbo.TA_SchemaVersion AS t USING (VALUES (N'04_procs_session_files', N'2026-11-12-a')) AS s (ScriptName, Rev) ON t.ScriptName = s.ScriptName
 WHEN MATCHED THEN UPDATE SET Rev = s.Rev, AppliedAt = SYSDATETIME()
 WHEN NOT MATCHED THEN INSERT (ScriptName, Rev) VALUES (s.ScriptName, s.Rev);
 GO

@@ -2,7 +2,7 @@
 
 Tables, functions and the procedures the app calls (plus `TA_usp_CanViewAttachment` for the file route and one internal helper). Generated from the screens and the contract in `docs/05-sp-contract.md`.
 
-`TA_usp_GetLocationPolicyLimit` is installed as a compile-ready stub. It accepts `ItemKey`, an optional `StayLocation`, and an optional `IsBillAvailable` (`Yes`/`No`); at least one of the latter two is required. It currently returns a null limit and the item's `EnforceEligibility` flag; replace the limit lookup in `04_procs_session_files.sql` with the approved location/bill-availability policy lookup when ready.
+`TA_usp_GetLocationPolicyLimit` is installed as a compile-ready stub. It accepts `ItemKey`, an optional `StayLocation`, an optional `IsBillAvailable` (`Yes`/`No`), and an optional `AlongWith` JSON array of active employee codes; at least one of `StayLocation` or `IsBillAvailable` is required. It validates the employee codes but currently returns a null limit and the item's `EnforceEligibility` flag. The approved location/bill-availability policy lookup must be implemented in `04_procs_session_files.sql` before the procedure can return revised limits.
 
 > **Status: written but NEVER EXECUTED.** There was no SQL Server where this was authored. What was done: a static checker (`npm run sql:lint`: balanced blocks/quotes/parentheses, CREATE-first-in-batch, every referenced object and `alias.Column` exists), a contract test (`tests/sqlContract.test.ts`: names, JSON keys, reference data, required server-side rules) and a smoke-test script. **Run `99_smoke_test.sql` on a development database first and expect to fix some syntax or logic slips.**
 

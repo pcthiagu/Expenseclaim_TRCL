@@ -37,8 +37,9 @@ test('each operation calls its stored procedure with the agreed PascalCase param
   const { g, calls } = setup((sp) => (sp === SP.getSession ? { code: '800001', name: 'K', role: 'employee' } : sp === SP.listRequests ? { rows: [], total: 0 } : [ SP.listPendingApprovals, SP.listApprovalHistory, SP.listReceipts, SP.lookupEmployees ].includes(sp as never) ? [] : { id: 'x', kind: 'claim' }));
   await g.getSession(); await g.listRecords({ kind: 'claim', employeeCode: '800002', status: 'submitted', search: 's', from: '2026-01-01', to: '2026-02-01', page: 2, pageSize: 10, sortKey: 'total', sortDir: 'desc' });
   await g.getRecord('travel', 'T1'); await g.submit('advance', 'A1'); await g.deleteDraft('claim', 'C1'); await g.copyRejectedClaim('C2');
-  await g.approve('claim', 'C3', { lines: [{ id: 'l1', approvedAmount: 5, approverRemarks: 'r' }], approverComments: 'ok' });
-  await g.reject('travel', 'T2', { approverRemarks: 'no' }); await g.reject('claim', 'C4', { rejectionReason: 'bad' });
+  await g.approve('claim', 'C3', { lines: [{ id: 'l1', approvedAmount: 5, approverRemarks: 'r', gstFields: { gstNumber: 'FIXED', state: 'Karnataka', igst: '2', cgst: '1', sgst: '1' } }], approverComments: 'ok' });
+  await g.reject('travel', 'T2', { approverRemarks: 'no' });
+  await g.reject('claim', 'C4', { lines: [{ id: 'l2', approvedAmount: null, approverRemarks: '', gstFields: { state: 'Kerala' } }], rejectionReason: 'bad' });
   await g.listPendingApprovals(); await g.listApprovalHistory(30); await g.listReceipts(); await g.deleteReceipt('R1'); await g.lookupEmployees('div');
   const by = (sp: string) => calls.filter((c) => c.sp === sp).map((c) => c.params);
   assert.deepEqual(by(SP.getSession), [{}]);
@@ -47,8 +48,9 @@ test('each operation calls its stored procedure with the agreed PascalCase param
   assert.deepEqual(by(SP.submitRequest), [{ Kind: 'advance', Id: 'A1' }]);
   assert.deepEqual(by(SP.deleteDraft), [{ Kind: 'claim', Id: 'C1' }]);
   assert.deepEqual(by(SP.copyRejectedClaim), [{ Id: 'C2' }]);
-  assert.deepEqual(by(SP.approveRequest), [{ Kind: 'claim', Id: 'C3', Lines: [{ id: 'l1', approvedAmount: 5, approverRemarks: 'r' }], ApproverComments: 'ok', ApproverRemarks: undefined }]);
+  assert.deepEqual(by(SP.approveRequest), [{ Kind: 'claim', Id: 'C3', Lines: [{ id: 'l1', approvedAmount: 5, approverRemarks: 'r', gstFields: { gstNumber: 'FIXED', state: 'Karnataka', igst: '2', cgst: '1', sgst: '1' } }], ApproverComments: 'ok', ApproverRemarks: undefined }]);
   assert.deepEqual(by(SP.rejectRequest).map((p) => [p.Kind, p.ApproverRemarks, p.RejectionReason]), [['travel', 'no', undefined], ['claim', undefined, 'bad']]);
+  assert.deepEqual(by(SP.rejectRequest)[1]!.Lines, [{ id: 'l2', approvedAmount: null, approverRemarks: '', gstFields: { state: 'Kerala' } }]);
   assert.deepEqual([by(SP.listApprovalHistory), by(SP.deleteReceipt), by(SP.lookupEmployees)], [[{ Days: 30 }], [{ Id: 'R1' }], [{ Query: 'div' }]]);
   for (const c of calls) { for (const k of ['RequestedBy', 'Role', 'role', 'EmployeeId']) assert.ok(!(k in c.params), `${c.sp} must not send ${k}: identity comes from the token`); }
 });
@@ -95,13 +97,15 @@ test('listRecords falls back to rows.length when the SP omits a total; policy nu
   assert.deepEqual([p?.policy.medicalAnnualLimit, p?.policy.advanceLimit], [20000, 15000]);
 });
 
-test('location policy limit calls its SP with item, optional stay location, and optional bill availability', async () => {
+test('location policy limit calls its SP with item, policy context, and selected colleague codes', async () => {
   const { g, calls } = setup((sp) => sp === SP.getLocationPolicyLimit ? { limit: 4500, limitPer: 'night', enforceEligibility: 'Y' } : {});
   assert.deepEqual(await g.getLocationPolicyLimit('o_lodge', 'Mumbai'), { limit: 4500, limitPer: 'night', enforceEligibility: 'Y' });
   assert.deepEqual(await g.getLocationPolicyLimit('l_food_dinner', '', 'No'), { limit: 4500, limitPer: 'night', enforceEligibility: 'Y' });
+  await g.getLocationPolicyLimit('l_food_dinner', '', 'Yes', [' E100 ', 'E200', 'E100', '']);
   assert.deepEqual(calls, [
-    { sp: SP.getLocationPolicyLimit, params: { ItemKey: 'o_lodge', StayLocation: 'Mumbai' } },
-    { sp: SP.getLocationPolicyLimit, params: { ItemKey: 'l_food_dinner', IsBillAvailable: 'No' } },
+    { sp: SP.getLocationPolicyLimit, params: { ItemKey: 'o_lodge', StayLocation: 'Mumbai', AlongWith: [] } },
+    { sp: SP.getLocationPolicyLimit, params: { ItemKey: 'l_food_dinner', IsBillAvailable: 'No', AlongWith: [] } },
+    { sp: SP.getLocationPolicyLimit, params: { ItemKey: 'l_food_dinner', IsBillAvailable: 'Yes', AlongWith: ['E100', 'E200'] } },
   ]);
   assert.equal(await setup(() => null).g.getLocationPolicyLimit('o_lodge', 'Mumbai'), null);
   assert.deepEqual(await setup((sp) => sp === SP.getLocationPolicyLimit ? { limit: 4500, EnforceEligibility: 'n' } : {}).g.getLocationPolicyLimit('o_lodge', 'Mumbai'),

@@ -1,6 +1,6 @@
 import type { PolicyConfig } from '../config/policy';
 import type {
-  AttachmentMeta, ClaimLine, EligibilityEnforcement, Employee, ExpenseClaim, LimitPer, RecordKind, Receipt, ReferenceData, Role, TrailEvent, TravelClaimRecord,
+  AttachmentMeta, ClaimLine, EligibilityEnforcement, Employee, ExpenseClaim, GstFields, LimitPer, RecordKind, Receipt, ReferenceData, Role, TrailEvent, TravelClaimRecord,
 } from '../types/domain';
 
 /**
@@ -58,8 +58,8 @@ export interface RecordQuery {
 export interface Page<T> { rows: T[]; total: number }
 
 export interface ApprovalDecision {
-  /** Per-line approved amounts and remarks for claims. */
-  lines?: Array<Pick<ClaimLine, 'id' | 'approvedAmount' | 'approverRemarks'>>;
+  /** Per-line approval values plus optional, GST-only corrections for claim fields. */
+  lines?: Array<Pick<ClaimLine, 'id' | 'approvedAmount' | 'approverRemarks'> & { gstFields?: GstFields }>;
   approverComments?: string;
   approverRemarks?: string;
   rejectionReason?: string;
@@ -71,7 +71,7 @@ export interface TravelClaimGateway {
   setViewMode?(mode: Role): void;
   getPolicy(): Promise<PolicySnapshot | null>;
   /** Location-specific item ceiling from TA_usp_GetLocationPolicyLimit. */
-  getLocationPolicyLimit(itemKey: string, stayLocation: string, billAvailable?: 'Yes' | 'No'): Promise<LocationPolicyLimit | null>;
+  getLocationPolicyLimit(itemKey: string, stayLocation: string, billAvailable?: 'Yes' | 'No', alongWithCodes?: readonly string[]): Promise<LocationPolicyLimit | null>;
   /** Field definitions, expense types, items and option lists: the screens contain none of these. */
   getReferenceData(): Promise<ReferenceData>;
   /** Who created, submitted and decided the request, with the decision text. */

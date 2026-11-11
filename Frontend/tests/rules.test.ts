@@ -141,8 +141,51 @@ test('fill-within-policy-limits caps lines, keeps decided lines, and remarks onl
   assert.equal(out[3]!.approvedAmount, 12000);
 });
 
+test('default approval amounts match claim amounts without replacing approver edits', () => {
+  const lines = [
+    line('s_med_lab', { amount: 2200 }),
+    line('s_med_lab', { amount: 1500 }, 900),
+    line('s_med_lab', { amount: 750 }, 0),
+  ];
+  const out = calc.withDefaultApprovedAmounts(lines);
+  assert.deepEqual(out.map((it) => it.approvedAmount), [2200, 900, 0]);
+  assert.equal(lines[0]!.approvedAmount, null, 'the source claim remains unchanged');
+});
+
 /* ---- Validation ------------------------------------------------------------------------ */
 const ctx = { employeeExists: emp, records: seed, now: NOW };
+
+test('configured GST fields render from reference data and normalize non-negative numeric amounts', () => {
+  const reference = buildReferenceData();
+  reference.types = reference.types.map((type) => ({
+    ...type,
+    items: type.items.map((item) => item.key === 'l_da'
+      ? { ...item, fields: [...item.fields, 'gstNumber', 'state', 'igst', 'cgst', 'sgst'] }
+      : item),
+  }));
+  setReferenceData(reference);
+  try {
+    const item = itemByKey('local', 'l_da');
+    if (!item) throw new Error('Test expense item is missing.');
+    const validated = val.validateLine({
+      itemKey: item.key,
+      fields: { date: '2026-10-01', amount: 100, gstNumber: '22ABCDE1234F1Z5', state: 'Tamil Nadu', igst: '0.5', cgst: 2, sgst: 2 },
+      attachments: [],
+    }, 'local', { now: NOW });
+    assert.equal(validated.ok, true);
+    const normalized = val.normalizeLine({ ...line(item.key, validated.fields), fields: validated.fields }, item);
+    assert.deepEqual(
+      { gstNumber: normalized.fields.gstNumber, state: normalized.fields.state, igst: normalized.fields.igst, cgst: normalized.fields.cgst, sgst: normalized.fields.sgst },
+      { gstNumber: '22ABCDE1234F1Z5', state: 'Tamil Nadu', igst: 0.5, cgst: 2, sgst: 2 },
+    );
+    const negative = val.validateLine({
+      itemKey: item.key, fields: { date: '2026-10-01', amount: 100, igst: -1 }, attachments: [],
+    }, 'local', { now: NOW });
+    assert.equal(negative.errors.igst, 'Enter a number of 0 or more');
+  } finally {
+    loadReferenceSchema();
+  }
+});
 
 test('medical claim exceeding the remaining annual balance cannot be submitted', () => {
   const draft = claimBy('800001/2026/0106');
@@ -177,6 +220,7 @@ test('line validation: fuel km, litres, bills, dates', () => {
   assert.equal(personal.errors.nonAccountableKm, 'Cannot exceed Total KM');
   const ok = val.validateLine({ itemKey: 'l_fuel_4w', fields: { date: '2026-10-01', fromLocation: 'A', toLocation: 'B', fromKm: 100, toKm: 142, nonAccountableKm: 2 }, attachments: [] }, 'fuel', { now: NOW });
   assert.equal(ok.ok, true);
+  assert.equal(ok.fields.totalKm, 40, 'non-accountable km is deducted from displayed Total KM');
   assert.equal(ok.fields.amount, 360, '(42-2) km x 9');
   const litres = val.validateLine({ itemKey: 's_fuel_litres', fields: { date: '2026-10-01', amount: 100, qty: 0 }, attachments: [] }, 'fuel', { now: NOW });
   assert.equal(litres.errors.qty, 'Enter the litres filled');

@@ -6,13 +6,14 @@ import { previewAttachment } from '../shared/preview';
 import { Button, FileChip } from '../../components/common/ui';
 import { Field } from '../../components/forms/Field';
 import { lineLimitAmount, overLimit } from '../../domain/calc';
-import { FIELD_DEFS, GRID_COLUMNS, itemByKey, typeByKey } from '../../domain/expenseSchema';
-import type { AttachmentMeta, ClaimLine, EligibilityEnforcement, ExpenseItemDef, ExpenseTypeKey, FieldKey } from '../../types/domain';
+import { FIELD_DEFS, GRID_COLUMNS, GST_FIELD_KEYS, itemByKey, lookup, typeByKey } from '../../domain/expenseSchema';
+import type { AttachmentMeta, ClaimLine, EligibilityEnforcement, ExpenseItemDef, ExpenseTypeKey, FieldKey, GstFieldKey } from '../../types/domain';
 import { date, dash, money, num, numFmt, time } from '../../utils/format';
 
 const NUM_COLS: Partial<Record<FieldKey, true>> = { amount: true, qty: true, limit: true, fromKm: true, toKm: true, totalKm: true, nonAccountableKm: true };
 const colLabel = (c: FieldKey): string => (c === 'attachment' ? 'Bills' : FIELD_DEFS[c]?.label ?? c);
 const dim = <span className="tc-text-secondary">—</span>;
+const isGstField = (key: FieldKey): key is GstFieldKey => GST_FIELD_KEYS.some((gstKey) => gstKey === key);
 
 /** Bills in a table cell. Files stored on the server (fileId + docType) are listed one per line and open in a new tab, so an approver can
  *  check every bill; otherwise the original compact form (first name + "+N") is kept. */
@@ -93,6 +94,23 @@ export interface ClaimItemsProps {
   onEdit: (id: string) => void;
   onRemove: (id: string) => void;
   onApproval: (id: string, patch: { approvedAmount?: number | null; approverRemarks?: string }) => void;
+  onGstChange?: (id: string, key: GstFieldKey, value: string) => void;
+}
+
+function gstEditor(p: ClaimItemsProps, it: ClaimLine, key: GstFieldKey, lineIndex: number, showLabel = false) {
+  const label = FIELD_DEFS[key]?.label ?? key;
+  const type = key === 'state' ? 'select' as const : 'text' as const;
+  return (
+    <Field
+      {...(showLabel ? { label } : {})}
+      type={type}
+      value={String(it.fields[key] ?? '')}
+      {...(key === 'state' ? { options: lookup('GST_STATES'), placeholder: 'Select state' } : {})}
+      ariaLabel={`${label} for line ${lineIndex + 1}`}
+      testId={`appr-gst-${key}-${lineIndex}`}
+      onChange={(value) => p.onGstChange?.(it.id, key, String(value))}
+    />
+  );
 }
 
 export function ClaimItems(p: ClaimItemsProps) {
@@ -127,7 +145,9 @@ function ItemsTable(p: ClaimItemsProps) {
                 <td><span className="tc-text-secondary tc-mono tc-text-xs">{i + 1}</span>&nbsp; <span className="tc-medium">{d.label}</span></td>
                 {cols.map((c) => <td key={c} className={NUM_COLS[c] ? 'tc-num' : undefined}>
                   {d.fields.includes(c)
-                    ? c === 'amount' && eligibilityWarning
+                    ? p.approving && isGstField(c)
+                      ? gstEditor(p, it, c, i)
+                      : c === 'amount' && eligibilityWarning
                       ? <span className="tc-over" title="Claimed amount exceeds eligibility" data-testid="eligibility-warning"><Icon name="alert" />{money(it.fields.amount)}</span>
                       : c === 'amount' && eligibility?.dynamicLimit
                         ? money(it.fields.amount)
@@ -195,10 +215,17 @@ function ItemCards(p: ClaimItemsProps) {
         if (f.modeOfTravel) facts.push(['Mode', String(f.modeOfTravel)]);
         if (f.billerName) facts.push(['Biller', String(f.billerName)]);
         if (f.billNumber) facts.push(['Bill number', String(f.billNumber)]);
-        if (f.totalKm !== undefined && f.totalKm !== '') facts.push(['Distance', numFmt(f.totalKm) + ' km' + (num(f.nonAccountableKm) ? ` (${numFmt(f.nonAccountableKm)} km personal)` : '')]);
+        if (f.totalKm !== undefined && f.totalKm !== '') facts.push(['Claimable distance', numFmt(f.totalKm) + ' km' + (num(f.nonAccountableKm) ? ` (${numFmt(f.nonAccountableKm)} km non-accountable)` : '')]);
         if (f.qty) facts.push(['Quantity', numFmt(f.qty) + ' L']);
         if (d.fields.includes('limit')) facts.push(['Policy limit', d.limitQty != null ? numFmt(d.limitQty) + ' L' : (la == null ? 'No fixed limit' : money(la))]);
         if (f.alongWith) facts.push(['Along with', String(f.alongWith)]);
+        for (const key of GST_FIELD_KEYS) {
+          const value = f[key];
+          if (!p.approving && value !== undefined && value !== '') {
+            const label = FIELD_DEFS[key]?.label ?? key;
+            facts.push([label, typeof value === 'number' ? numFmt(value) : String(value)]);
+          }
+        }
         return (
           <article key={it.id} className="tc-item-card">
             <div className="tc-item-card__top">
@@ -217,6 +244,7 @@ function ItemCards(p: ClaimItemsProps) {
               <div className="tc-item-card__approve">
                 {p.approving ? (
                   <>
+                    {GST_FIELD_KEYS.filter((key) => d.fields.includes(key)).map((key) => gstEditor(p, it, key, i, true))}
                     <Field label="Approved Amount" type="money" value={it.approvedAmount ?? ''} error={p.lineErrors[it.id]} onChange={(v) => p.onApproval(it.id, { approvedAmount: v === '' ? null : Number(v) })} />
                     <Field label="Approver Remarks" type="text" value={it.approverRemarks} placeholder="Optional" onChange={(v) => p.onApproval(it.id, { approverRemarks: String(v) })} />
                   </>

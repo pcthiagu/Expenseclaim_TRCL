@@ -93,9 +93,17 @@ export function validateLine(
     const empty = v === undefined || v === null || v === '' || (typeof v === 'string' && !v.trim());
     if (fd.required && empty) errors[key] = 'Required';
   }
+  for (const key of ['igst', 'cgst', 'sgst'] as const) {
+    const value = f[key];
+    if (d.fields.includes(key) && value !== undefined && value !== '') {
+      const amount = Number(value);
+      if (!Number.isFinite(amount) || amount < 0) errors[key] = 'Enter a number of 0 or more';
+    }
+  }
   if (d.compute === 'fuelKm') {
     if (!errors.toKm && f.fromKm !== '' && f.toKm !== '' && num(f.toKm) <= num(f.fromKm)) errors.toKm = 'Must be greater than From KM';
-    if (!errors.nonAccountableKm && num(f.nonAccountableKm) > num(f.totalKm)) errors.nonAccountableKm = 'Cannot exceed Total KM';
+    const tripKm = Math.max(0, num(line.fields.toKm) - num(line.fields.fromKm));
+    if (!errors.nonAccountableKm && num(f.nonAccountableKm) > tripKm) errors.nonAccountableKm = 'Cannot exceed Total KM';
     if (!errors.toKm && !errors.fromKm && !errors.nonAccountableKm && !(num(f.amount) > 0)) errors.toKm = 'No claimable distance after deductions';
   } else if (!errors.amount && !(num(f.amount) > 0)) {
     errors.amount = 'Enter an amount greater than zero';
@@ -117,8 +125,9 @@ export function validateLine(
 /** Normalises a validated line for saving (numeric coercion, drop fields the item doesn't use). */
 export function normalizeLine(line: ClaimLine, d: ExpenseItemDef): ClaimLine {
   const fields: ClaimLine['fields'] = { ...line.fields };
-  for (const k of ['amount', 'qty', 'fromKm', 'toKm', 'nonAccountableKm', 'totalKm'] as const) {
-    if (fields[k] !== undefined && fields[k] !== '') fields[k] = num(fields[k]);
+  for (const k of ['amount', 'qty', 'fromKm', 'toKm', 'nonAccountableKm', 'totalKm', 'igst', 'cgst', 'sgst'] as const) {
+    if (typeof fields[k] === 'string' && !fields[k].trim()) fields[k] = '';
+    else if (fields[k] !== undefined && fields[k] !== '') fields[k] = num(fields[k]);
   }
   for (const k of Object.keys(fields) as (keyof typeof fields)[]) {
     if (!d.fields.includes(k)) delete fields[k];

@@ -29,7 +29,7 @@ IF OBJECT_ID(N'dbo.TA_vw_Employee', N'V') IS NULL
 GO
 
 /* Who may approve. An employee listed here (and active) is the "admin"/approver role of the screens. */
-IF OBJECT_ID(N'dbo.TA_Approver', N'U') IS NULL
+IF OBJECT_ID(N'TA_Approver', N'U') IS NULL
 BEGIN
   CREATE TABLE dbo.TA_Approver (
     EmployeeCode NVARCHAR(30)  NOT NULL CONSTRAINT PK_TA_Approver PRIMARY KEY,
@@ -94,7 +94,7 @@ BEGIN
     Label              NVARCHAR(80)  NOT NULL,
     ShortLabel         NVARCHAR(40)  NULL,
     FieldList          NVARCHAR(400) NOT NULL,     -- JSON array of FieldKeys shown/required for this item, in display order
-    Compute            NVARCHAR(12)  NULL,         -- 'fuelKm': amount is computed from the odometer readings
+    [Compute]          NVARCHAR(12)  NULL,         -- 'fuelKm': amount is computed from the odometer readings
     RateKey            NVARCHAR(30)  NULL,         -- twoWheelerPerKm | fourWheelerPerKm
     LimitAmount        DECIMAL(18,2) NULL,         -- policy ceiling per LimitPer; NULL = no fixed limit
     LimitPer           NVARCHAR(8)   NULL,         -- bill | day | night
@@ -325,8 +325,8 @@ BEGIN
 END
 GO
 
--- Stamp: this script is installed at revision 2026-10-28-b (the app compares it with the revision it expects).
-MERGE dbo.TA_SchemaVersion AS t USING (VALUES (N'01_tables', N'2026-10-28-b')) AS s (ScriptName, Rev) ON t.ScriptName = s.ScriptName
+-- Stamp: this script is installed at revision 2026-11-12-a (the app compares it with the revision it expects).
+MERGE dbo.TA_SchemaVersion AS t USING (VALUES (N'01_tables', N'2026-11-12-a')) AS s (ScriptName, Rev) ON t.ScriptName = s.ScriptName
 WHEN MATCHED THEN UPDATE SET Rev = s.Rev, AppliedAt = SYSDATETIME()
 WHEN NOT MATCHED THEN INSERT (ScriptName, Rev) VALUES (s.ScriptName, s.Rev);
 GO

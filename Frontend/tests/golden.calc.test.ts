@@ -52,14 +52,16 @@ test('effectiveLimit / overLimit / lineLimitAmount equal the prototype\'s for ev
   assert.equal(checked, Object.keys(G.limits).length, 'the database seed defines exactly the items the prototype had');
 });
 
-test('fuel-by-km computation equals the prototype\'s (incl. non-accountable km, zero and reversed readings)', () => {
+test('fuel-by-km computation preserves rates and computes claimable total km (incl. deductions, zero and reversed readings)', () => {
   const inputs = G.fuelInputs as LineFields[];
   for (const key of ['l_fuel_2w', 'l_fuel_4w']) {
     const def = EXPENSE_TYPES[0]!.items.find((i) => i.key === key)!;
     inputs.forEach((inp, i) => {
       const mine = calc.applyFuel(def, inp);
       const g = G.fuel[`${key}|${i}`];
-      assert.equal(mine.totalKm, g.totalKm, `${key} totalKm ${JSON.stringify(inp)}`);
+      const tripKm = Math.max(0, Number(inp.toKm || 0) - Number(inp.fromKm || 0));
+      const claimableKm = Math.max(0, tripKm - Number(inp.nonAccountableKm || 0));
+      assert.equal(mine.totalKm, claimableKm, `${key} claimable totalKm ${JSON.stringify(inp)}`);
       assert.equal(mine.amount, g.amount, `${key} amount ${JSON.stringify(inp)}`);
     });
   }

@@ -3,7 +3,7 @@
 // 1) sql/spWhitelist.js: add to ALLOWED_STORED_PROCEDURES. Approver rights are enforced INSIDE the procedures from ExecutedBy.
 ["TA_usp_GetSession",          { roles: null }],
 ["TA_usp_GetPolicy",           { roles: null }],
-["TA_usp_GetLocationPolicyLimit", { roles: null }], // {ItemKey, StayLocation} -> {limit, limitPer}; the installed stub returns null until policy lookup is added
+["TA_usp_GetLocationPolicyLimit", { roles: null }], // {ItemKey, StayLocation?, IsBillAvailable?, AlongWith: [employeeCode, ...]} -> {limit, limitPer}; stub returns null until policy lookup is added
 ["TA_usp_GetReferenceData",    { roles: null }],
 ["TA_usp_GetApprovalTrail",    { roles: null }],
 ["TA_usp_ListRequests",        { roles: null }],

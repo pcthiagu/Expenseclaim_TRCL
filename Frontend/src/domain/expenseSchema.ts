@@ -10,6 +10,7 @@ import type {
 export const FIELD_DEFS = {} as Record<FieldKey, FieldDef>;
 export const EXPENSE_TYPES: ExpenseTypeDef[] = [];
 export const LOOKUPS: Record<string, string[]> = {};
+export const GST_FIELD_KEYS = ['gstNumber', 'state', 'igst', 'cgst', 'sgst'] as const;
 let loaded = false;
 export const isReferenceDataLoaded = (): boolean => loaded;
 /** An option list from the database (MODES, CITIES, TRAVEL_PURPOSE, ESTIMATE_ITEM, COST_CENTRE); empty when the list does not exist. */
@@ -28,7 +29,8 @@ export function withBillAvailabilityDefault(item: ExpenseItemDef, fields: LineFi
 /** The field keys the app knows how to draw. The DATABASE defines labels, rules and which items use which fields; a new key needs a screen change. */
 export const KNOWN_FIELD_KEYS: readonly FieldKey[] = [
   'date', 'fromDate', 'toDate', 'fromTime', 'toTime', 'time', 'modeOfTravel', 'stayLocation', 'fromLocation', 'toLocation', 'billerName', 'billNumber', 'isBillAvailable',
-  'fromKm', 'toKm', 'totalKm', 'nonAccountableKm', 'qty', 'amount', 'limit', 'remarks', 'alongWith', 'attachment',
+  'fromKm', 'toKm', 'totalKm', 'nonAccountableKm', 'qty', 'amount', 'limit', 'remarks', 'alongWith',
+  'gstNumber', 'state', 'igst', 'cgst', 'sgst', 'attachment',
 ];
 
 /** Replaces the live reference data (in place, so every module sees it). Throws a readable error if the database data is unusable. */
@@ -87,6 +89,7 @@ export const GRID_COLUMNS: readonly FieldKey[] = [
   'fromLocation', 'toLocation', 'stayLocation', 'modeOfTravel',
   'fromDate', 'toDate', 'fromTime', 'toTime',
   'fromKm', 'toKm', 'totalKm', 'nonAccountableKm', 'alongWith',
+  'gstNumber', 'state', 'igst', 'cgst', 'sgst',
 ];
 
 export interface StatusDef { key: RequestStatus; label: string; tone: 'neutral' | 'info' | 'success' | 'error' }

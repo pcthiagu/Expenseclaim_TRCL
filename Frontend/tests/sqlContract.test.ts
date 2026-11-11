@@ -67,18 +67,25 @@ test('the SQL seed is the single source of the reference data: complete, consist
   assert.equal(ref.types.length, 5);
   assert.deepEqual(ref.types.map((t) => t.key), ['fuel', 'local', 'medical', 'other', 'outside'], 'expense types in the order the dropdown shows them');
   assert.equal(ref.types.reduce((n, t) => n + t.items.length, 0), 32);
-  assert.equal(ref.fields.length, 23);
+  assert.equal(ref.fields.length, 28);
   assert.deepEqual(ref.lookups.BILL_AVAILABILITY, ['Yes', 'No']);
+  assert.equal(ref.lookups.GST_STATES?.length, 36);
+  for (const key of ['gstNumber', 'state', 'igst', 'cgst', 'sgst']) {
+    assert.ok(ref.fields.some((field) => field.key === key), `GST field ${key} is defined`);
+  }
+  assert.equal(ref.fields.find((field) => field.key === 'state')?.options, 'GST_STATES');
+  for (const key of ['igst', 'cgst', 'sgst']) assert.equal(ref.fields.find((field) => field.key === key)?.type, 'number');
   const fieldKeys = new Set(ref.fields.map((f) => f.key));
   const itemKeys = new Set<string>();
   for (const t of ref.types) for (const i of t.items) {
     assert.ok(!itemKeys.has(i.key), `item ${i.key} is unique`); itemKeys.add(i.key);
     assert.ok(i.fields.length > 0, `${i.key} has fields`);
+    for (const key of ['gstNumber', 'state', 'igst', 'cgst', 'sgst']) assert.ok((i.fields as readonly string[]).includes(key), `${i.key} captures ${key}`);
     for (const f of i.fields) assert.ok(fieldKeys.has(f), `${i.key} uses undefined field ${f}`);
     if (i.compute) assert.ok(i.rate, `${i.key}: a computed item needs a rate key`);
   }
   for (const f of ref.fields) if (f.options) assert.ok(ref.lookups[f.options]?.length, `field ${f.key} points at the option list ${f.options}`);
-  for (const k of ['MODES', 'CITIES', 'TRAVEL_PURPOSE', 'ESTIMATE_ITEM']) assert.ok((ref.lookups[k] ?? []).length > 0, `option list ${k}`);
+  for (const k of ['MODES', 'CITIES', 'GST_STATES', 'TRAVEL_PURPOSE', 'ESTIMATE_ITEM']) assert.ok((ref.lookups[k] ?? []).length > 0, `option list ${k}`);
   assert.deepEqual(ref.lookups.COST_CENTRE, ['CC-1'], 'cost centres come from the employee view, not the seed');
   assert.equal(seed.TA_Setting!.length, 7);
   // Policy settings the procedures read by name must exist in the seed.
@@ -97,8 +104,14 @@ test('GetReferenceData returns everything the screens read, and the tables/colum
   assert.match(all, /JSON array of FieldKeys/, 'FieldList is a JSON array (order preserved)');
   const limitProc = all.slice(all.indexOf('CREATE OR ALTER PROCEDURE dbo.TA_usp_GetLocationPolicyLimit'), all.indexOf('CREATE OR ALTER PROCEDURE dbo.TA_usp_GetReferenceData'));
   assert.match(limitProc, /JSON_VALUE\(@JsonParam, '\$\.IsBillAvailable'\)/);
+  assert.match(limitProc, /JSON_QUERY\(@JsonParam, '\$\.AlongWith'\)/);
+  assert.match(limitProc, /OPENJSON\(@alongWithJson\)/);
+  assert.match(limitProc, /e\.EmployeeCode = c\.EmployeeCode AND e\.IsActive = 1/);
   assert.match(limitProc, /@stayLocation IS NULL AND @billAvailable IS NULL/);
   assert.match(limitProc, /SELECT @enforceEligibility = EnforceEligibility FROM dbo\.TA_ExpenseItem/);
+  const employeeLookup = all.slice(all.indexOf('CREATE OR ALTER PROCEDURE dbo.TA_usp_LookupEmployees'), all.indexOf('CREATE OR ALTER PROCEDURE dbo.TA_usp_UploadAttachment'));
+  assert.match(employeeLookup, /e\.IsActive = 1/);
+  assert.doesNotMatch(employeeLookup, /TA_fn_ActsAsApprover|available to approvers only/);
 });
 
 test('the approval trail procedure returns who/what/when and is allowed in both views', () => {
@@ -113,6 +126,10 @@ test('server-side rules the screens rely on are present in the SQL (not just in 
     ['request numbers are generated in the database, concurrency-safe', /UPDATE dbo\.TA_Counter WITH \(UPDLOCK, HOLDLOCK\) SET @n = LastValue = LastValue \+ 1/],
     ['client status/number/approver are never read on save', /status, approver, dates, approved amounts/],
     ['fuel is recomputed server-side', /twoWheelerPerKm/],
+    ['approvers can persist GST corrections from submitted claim lines', /GstFields NVARCHAR\(MAX\) '\$\.gstFields' AS JSON/],
+    ['approval rejects GST fields not configured for the expense item', /GST corrections may only update GST fields configured for that expense line/],
+    ['fuel Total KM stores the post-deduction claimable distance', /JSON_MODIFY\(l\.Fields, '\$\.totalKm', b\.claimable\)/],
+    ['fuel non-accountable KM is checked against the odometer distance', /nonAcc > toKm - fromKm/],
     ['a receipt cannot be used twice', /already on another claim/],
     ['approved amount must lie between 0 and the claimed amount', /a\.Amt < 0 OR a\.Amt > l\.Amount/],
     ['reject zeroes undecided lines', /SET ApprovedAmount = 0 WHERE RequestId = @id AND ApprovedAmount IS NULL/],
@@ -132,7 +149,7 @@ test('approver rights depend on the VIEW the call acts in (ActAs), never on the 
   assert.match(fn, /dbo\.TA_fn_IsApprover\([\s\S]*?\) = 1\s+AND ISNULL\(LOWER\(JSON_VALUE\(@JsonParam, '\$\.ActAs'\)\), N'approver'\) <> N'employee'/, 'ActAs can only narrow a genuine approver');
   assert.match(fn, /CREATE OR ALTER FUNCTION dbo\.TA_fn_Visible \(@Me NVARCHAR\(30\), @AsApprover BIT\)/);
   const procs = [...all.matchAll(/CREATE OR ALTER PROCEDURE dbo\.(TA_usp_\w+)([\s\S]*?)\nGO/g)];
-  const capability = new Set(['TA_usp_GetSession', 'TA_usp_CanViewAttachment', 'TA_usp_Internal_NextNumber', 'TA_usp_GetPolicy', 'TA_usp_GetLocationPolicyLimit', 'TA_usp_GetReferenceData', 'TA_usp_UploadAttachment']);
+  const capability = new Set(['TA_usp_GetSession', 'TA_usp_CanViewAttachment', 'TA_usp_Internal_NextNumber', 'TA_usp_GetPolicy', 'TA_usp_GetLocationPolicyLimit', 'TA_usp_GetReferenceData', 'TA_usp_UploadAttachment', 'TA_usp_LookupEmployees']);
   for (const [, name, body] of procs) {
     if (capability.has(name!)) continue;
     assert.doesNotMatch(body!, /TA_fn_IsApprover\(@me\)/, `${name}: must use the acting view, not the raw capability`);
@@ -162,8 +179,9 @@ test('the policy procedure returns the settings and the self-approval rule (item
 /**
  * THE OPERATION x VIEW MATRIX. Every procedure is one of three kinds; the SQL must match what the screens assume:
  *   employee-only  : refuses the Approver view  (receipt box, copy a rejected claim)
- *   approver-only  : refuses the Employee view  (approve, reject, queue, history, employee lookup)
+ *   approver-only : refuses the Employee view  (approve, reject, queue, history)
  *   both           : scoped by the view through TA_fn_Visible (list/get/save/delete/submit)
+ *   active employee: directory lookup, available in either view to signed-in employees only
  */
 test('operation x view matrix: each procedure refuses exactly the view it must refuse', () => {
   const body = (name: string): string => {
@@ -172,8 +190,11 @@ test('operation x view matrix: each procedure refuses exactly the view it must r
     return m![1]!;
   };
   const employeeOnly = ['TA_usp_ListReceipts', 'TA_usp_CreateReceipts', 'TA_usp_UpdateReceipt', 'TA_usp_DeleteReceipt', 'TA_usp_CopyRejectedClaim'];
-  const approverOnly = ['TA_usp_LookupEmployees', 'TA_usp_ApproveRequest', 'TA_usp_RejectRequest', 'TA_usp_ListPendingApprovals', 'TA_usp_ListApprovalHistory'];
+  const approverOnly = ['TA_usp_ApproveRequest', 'TA_usp_RejectRequest', 'TA_usp_ListPendingApprovals', 'TA_usp_ListApprovalHistory'];
   const both = ['TA_usp_ListRequests', 'TA_usp_GetRequest', 'TA_usp_SaveRequestDraft', 'TA_usp_DeleteDraft', 'TA_usp_SubmitRequest', 'TA_usp_GetApprovalTrail'];
+  const activeEmployee = body('TA_usp_LookupEmployees');
+  assert.match(activeEmployee, /EmployeeCode = @me AND IsActive = 1/, 'employee lookup requires an active employee');
+  assert.doesNotMatch(activeEmployee, /@asApprover = [01] THROW 50000, N'\[FORBIDDEN\]/, 'employee lookup works in either view');
   for (const n of employeeOnly) assert.match(body(n), /@asApprover = 1 THROW 50000, N'\[FORBIDDEN\]/, `${n}: must refuse the approver view`);
   for (const n of approverOnly) assert.match(body(n), /@asApprover = 0 THROW 50000, N'\[FORBIDDEN\]/, `${n}: must refuse the employee view`);
   for (const n of both) {
@@ -181,7 +202,7 @@ test('operation x view matrix: each procedure refuses exactly the view it must r
     assert.doesNotMatch(b, /@(asApprover|isApprover) = [01] THROW 50000, N'\[FORBIDDEN\]/, `${n}: works in both views`);
     assert.match(b, /TA_fn_Visible\(@me, @(asApprover|isApprover)\)/, `${n}: scoped by the acting view`);
   }
-  assert.equal(employeeOnly.length + approverOnly.length + both.length + 5 /* session, policy, reference data, upload, location policy */, Object.values(SP).length, 'every procedure the app calls is classified');
+  assert.equal(employeeOnly.length + approverOnly.length + both.length + 6 /* session, policy, reference data, upload, location policy, directory lookup */, Object.values(SP).length, 'every procedure the app calls is classified');
   // Approving or rejecting one's own request is a separate, configurable rule (segregation of duties).
   for (const n of ['TA_usp_ApproveRequest', 'TA_usp_RejectRequest']) assert.match(body(n), /AllowSelfApproval/, `${n}: self-approval rule`);
 });

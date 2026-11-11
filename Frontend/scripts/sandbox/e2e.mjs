@@ -77,13 +77,14 @@ const newLocalClaim = async (page, purpose = 'Vendor visit') => {
   await page.selectOption(T('expense-type'), 'local');
   await fill(page, 'purpose', purpose);
 };
-async function addConveyance(page, amount = 350, extra = async () => {}) {
+async function addConveyance(page, amount = 350, extra = async () => {}, action = 'line-save') {
   await page.click(T('add-expense')); await page.waitForSelector(T('line-modal'));
   await page.selectOption(T('line-item'), 'l_conveyance');
   await fill(page, 'line-date', '2026-10-05'); await page.selectOption(T('line-modeOfTravel'), 'Cab');
   await fill(page, 'line-fromLocation', 'Office'); await fill(page, 'line-toLocation', 'Site'); await fill(page, 'line-amount', amount);
   await extra();
-  await page.click(T('line-save')); await closed(page);
+  await page.click(T(action));
+  if (action === 'line-save') await closed(page);
 }
 // Switch to the approver and wait until the approver's list (title 'Expense Claims', everyone's rows) has really replaced the employee's.
 const asAdmin = async (page) => {
@@ -165,6 +166,11 @@ await scenario('add expense: required-field errors, then success updates totals;
   await page.click(T('line-save'));
   const msg = await page.textContent(`${T('line-modal')} .tc-alert`);
   for (const f of ['Date: Required', 'Mode of Travel: Required', 'From Location: Required', 'To Location: Required', 'Amount: Required']) assert.match(msg, new RegExp(f));
+  assert.equal(await page.locator(T('line-date')).getAttribute('aria-invalid'), 'true');
+  assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('data-testid')), 'line-date');
+  await fill(page, 'line-date', '2026-10-05');
+  await page.waitForFunction(() => document.querySelector('[data-testid="line-date"]')?.getAttribute('aria-invalid') !== 'true');
+  assert.doesNotMatch(await page.textContent(`${T('line-modal')} .tc-alert`), /Date: Required/);
   await page.keyboard.press('Escape'); await closed(page);
   assert.equal(await page.locator(T('item-row')).count(), 0, 'cancelling adds nothing');
   await addConveyance(page, 350);
@@ -181,14 +187,42 @@ await scenario('add expense: required-field errors, then success updates totals;
   assert.equal(await rows(page).count(), 7);
 });
 
+await scenario('missing bill scrolls to the inline bill error', async (page) => {
+  await newLocalClaim(page);
+  await page.click(T('add-expense')); await page.waitForSelector(T('line-modal'));
+  await page.selectOption(T('line-item'), 'l_food_dinner');
+  await fill(page, 'line-date', '2026-10-05');
+  await fill(page, 'line-billerName', 'Cafe');
+  await fill(page, 'line-amount', 450);
+  await page.click(T('line-save'));
+  assert.match(await page.textContent(`${T('line-modal')} .tc-alert`), /Bills: Attach at least one bill/);
+  assert.match(await page.textContent(`${T('line-modal')} .tc-field--error .tc-error`), /Attach at least one bill/);
+  assert.equal(await page.evaluate(() => document.activeElement?.classList.contains('tc-dropzone')), true);
+});
+
+await scenario('add and next keeps the expense dialog open and resets it for the next line', async (page) => {
+  await newLocalClaim(page);
+  await addConveyance(page, 350, async () => {}, 'line-add-next');
+  await page.waitForFunction(() => document.querySelector('[data-testid="line-modal"]') && document.querySelector('[data-testid="line-item"]')?.value === '');
+  assert.equal((await page.textContent(T('total-amount'))).trim(), '₹350.00');
+  await page.selectOption(T('line-item'), 'l_conveyance');
+  await fill(page, 'line-date', '2026-10-06'); await page.selectOption(T('line-modeOfTravel'), 'Cab');
+  await fill(page, 'line-fromLocation', 'Site'); await fill(page, 'line-toLocation', 'Office'); await fill(page, 'line-amount', 125);
+  await page.click(T('line-save')); await closed(page);
+  assert.equal(await page.locator(T('item-row')).count(), 2);
+  assert.equal((await page.textContent(T('total-amount'))).trim(), '₹475.00');
+});
+
 await scenario('fuel by km: amount and total km are computed live (and read-only); litres over the 40 L cap warns', async (page) => {
   await open(page, '#/claims/new'); await fill(page, 'purpose', 'Site visits');
   await page.click(T('add-expense')); await page.selectOption(T('line-item'), 'l_fuel_4w');
   await fill(page, 'line-fromKm', 100); await fill(page, 'line-toKm', 142); await fill(page, 'line-nonAccountableKm', 2);
+  assert.equal(await page.inputValue(T('line-totalKm')), '40');
   assert.equal(await page.inputValue(T('line-amount')), '360');
   assert.equal(await page.locator(T('line-amount')).getAttribute('readonly'), '');
   await page.selectOption(T('line-item'), 'l_fuel_2w');
   await fill(page, 'line-fromKm', 100); await fill(page, 'line-toKm', 142); await fill(page, 'line-nonAccountableKm', 12);
+  assert.equal(await page.inputValue(T('line-totalKm')), '30');
   assert.equal(await page.inputValue(T('line-amount')), '120');
   await fill(page, 'line-toKm', 100); await fill(page, 'line-date', '2026-10-01'); await fill(page, 'line-fromLocation', 'A'); await fill(page, 'line-toLocation', 'B');
   await page.click(T('line-save'));

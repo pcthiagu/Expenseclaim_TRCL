@@ -1,6 +1,6 @@
 import { DEFAULT_POLICY, HISTORY_DAYS } from '@/config/policy';
 import { applyFuel } from '@/domain/calc';
-import { itemByKey } from '@/domain/expenseSchema';
+import { GST_FIELD_KEYS, itemByKey } from '@/domain/expenseSchema';
 import {
   emptyFilters, matchesNonStatus, paginate, sortRows, approvalsView,
 } from '@/domain/lists';
@@ -15,7 +15,7 @@ import type {
   ApprovalDecision, LocationPolicyLimit, Page, PolicySnapshot, RecordQuery, SessionUser, TravelClaimGateway,
 } from '@/services/ports';
 import type {
-  Actor, AdvanceRequest, AttachmentMeta, ClaimLine, Employee, ExpenseClaim, Receipt, RecordKind, ReferenceData,
+  Actor, AdvanceRequest, AttachmentMeta, ClaimLine, Employee, ExpenseClaim, GstFields, Receipt, RecordKind, ReferenceData,
   TrailEvent, TravelClaimRecord, TravelRequest,
 } from '@/types/domain';
 import { nowIso, today } from '@/utils/format';
@@ -46,6 +46,18 @@ export interface ServerEngineOptions {
 }
 
 const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x)) as T;
+
+function withGstCorrections(line: ClaimLine, expenseType: ExpenseClaim['expenseType'], gstFields?: GstFields): ClaimLine {
+  if (!gstFields) return line;
+  const def = itemByKey(expenseType, line.itemKey);
+  const fields = { ...line.fields };
+  for (const key of GST_FIELD_KEYS) {
+    if (def?.fields.includes(key) && Object.prototype.hasOwnProperty.call(gstFields, key)) {
+      fields[key] = gstFields[key] ?? '';
+    }
+  }
+  return { ...line, fields };
+}
 
 function fail(code: ApiErrorCode, message: string, details: unknown = null): never {
   const status = { forbidden: 403, not_found: 404, validation: 422, conflict: 409, unauthorized: 401 }[code as 'forbidden'] ?? 400;
@@ -332,7 +344,11 @@ export class ServerEngine implements TravelClaimGateway {
       const byId = new Map((d.lines ?? []).map((l) => [l.id, l] as const));
       const lines = r.items.map((it) => {
         const l = byId.get(it.id);
-        return { ...it, approvedAmount: l ? l.approvedAmount : null, approverRemarks: l?.approverRemarks ?? '' };
+        return {
+          ...withGstCorrections(it, r.expenseType, l?.gstFields),
+          approvedAmount: l ? l.approvedAmount : null,
+          approverRemarks: l?.approverRemarks ?? '',
+        };
       });
       const check = validateApproval(lines); // 0 <= approved <= claimed, enforced here, not trusted from the browser
       if (!check.ok) validationFail(check);
@@ -359,7 +375,12 @@ export class ServerEngine implements TravelClaimGateway {
       const byId = new Map((d.lines ?? []).map((l) => [l.id, l] as const));
       r.items = zeroUndecidedOnReject(r.items.map((it) => {
         const l = byId.get(it.id);
-        return l ? { ...it, approvedAmount: l.approvedAmount, approverRemarks: l.approverRemarks } : it;
+        if (!l) return it;
+        return {
+          ...withGstCorrections(it, r.expenseType, l.gstFields),
+          approvedAmount: l.approvedAmount,
+          approverRemarks: l.approverRemarks,
+        };
       }));
       r.approverComments = d.approverComments ?? r.approverComments;
       r.rejectionReason = reason;

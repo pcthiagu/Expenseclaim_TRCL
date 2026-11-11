@@ -222,10 +222,10 @@ BEGIN
       THROW 50000, N'[VALIDATION] An expense item does not belong to this expense type.', 1;
     IF EXISTS (SELECT 1 FROM #Lines WHERE ISJSON(Fields) = 0) THROW 50000, N'[VALIDATION] A line has unreadable fields.', 1;
 
-    -- Fuel by kilometres: totalKm and amount are ALWAYS computed here (client values are ignored).
+    -- Fuel by kilometres: claimable totalKm and amount are ALWAYS computed here (client values are ignored).
     DECLARE @twoW DECIMAL(18,2) = ISNULL(TRY_CAST(dbo.TA_fn_Setting(N'RateTwoWheelerPerKm') AS DECIMAL(18,2)), 4);
     DECLARE @fourW DECIMAL(18,2) = ISNULL(TRY_CAST(dbo.TA_fn_Setting(N'RateFourWheelerPerKm') AS DECIMAL(18,2)), 9);
-    UPDATE l SET Fields = JSON_MODIFY(JSON_MODIFY(l.Fields, '$.totalKm', a.total), '$.amount',
+    UPDATE l SET Fields = JSON_MODIFY(JSON_MODIFY(l.Fields, '$.totalKm', b.claimable), '$.amount',
                            ROUND(b.claimable * CASE i.RateKey WHEN N'twoWheelerPerKm' THEN @twoW ELSE @fourW END, 2))
     FROM #Lines l
     JOIN dbo.TA_ExpenseItem i ON i.ItemKey = l.ItemKey AND i.Compute = N'fuelKm'
@@ -438,9 +438,9 @@ BEGIN
     -- fuel by kilometres
     INSERT @E (Msg) SELECT CONCAT(N'Line ', N, N': To KM: Must be greater than From KM') FROM #L WHERE Compute = N'fuelKm' AND fromKm IS NOT NULL AND toKm IS NOT NULL AND toKm <= fromKm;
     INSERT @E (Msg) SELECT CONCAT(N'Line ', N, N': KM ', NCHAR(8211), N' Non Accountable: Cannot exceed Total KM') FROM #L
-      WHERE Compute = N'fuelKm' AND fromKm IS NOT NULL AND toKm IS NOT NULL AND toKm > fromKm AND nonAcc > ISNULL(totalKm, 0);
+      WHERE Compute = N'fuelKm' AND fromKm IS NOT NULL AND toKm IS NOT NULL AND toKm > fromKm AND nonAcc > toKm - fromKm;
     INSERT @E (Msg) SELECT CONCAT(N'Line ', N, N': To KM: No claimable distance after deductions') FROM #L
-      WHERE Compute = N'fuelKm' AND fromKm IS NOT NULL AND toKm IS NOT NULL AND toKm > fromKm AND nonAcc <= ISNULL(totalKm, 0) AND Amount <= 0;
+      WHERE Compute = N'fuelKm' AND fromKm IS NOT NULL AND toKm IS NOT NULL AND toKm > fromKm AND nonAcc <= toKm - fromKm AND Amount <= 0;
     -- amount, litres, dates, times
     INSERT @E (Msg) SELECT CONCAT(N'Line ', N, N': Amount: Enter an amount greater than zero') FROM #L WHERE ISNULL(Compute, N'') <> N'fuelKm' AND amountText <> N'' AND Amount <= 0;
     INSERT @E (Msg) SELECT CONCAT(N'Line ', N, N': Quantity (litres): Enter the litres filled') FROM #L
@@ -507,8 +507,8 @@ BEGIN
 END
 GO
 
--- Stamp: this script is installed at revision 2026-10-28-b (the app compares it with the revision it expects).
-MERGE dbo.TA_SchemaVersion AS t USING (VALUES (N'05_procs_requests', N'2026-10-28-b')) AS s (ScriptName, Rev) ON t.ScriptName = s.ScriptName
+-- Stamp: this script is installed at revision 2026-11-12-a (the app compares it with the revision it expects).
+MERGE dbo.TA_SchemaVersion AS t USING (VALUES (N'05_procs_requests', N'2026-11-12-a')) AS s (ScriptName, Rev) ON t.ScriptName = s.ScriptName
 WHEN MATCHED THEN UPDATE SET Rev = s.Rev, AppliedAt = SYSDATETIME()
 WHEN NOT MATCHED THEN INSERT (ScriptName, Rev) VALUES (s.ScriptName, s.Rev);
 GO

@@ -10,10 +10,12 @@ import { useToast } from '../../components/common/Toast';
 import { applyFuel, effectiveLimit, fuelRate, lineLimitAmount, overLimit } from '../../domain/calc';
 import { FIELD_DEFS, itemByKey, lookup, normalizeBillAvailability, typeByKey, withBillAvailabilityDefault } from '../../domain/expenseSchema';
 import { attachmentFromReceipt, pickableForLine, prefillFromReceipts } from '../../domain/receipts';
+import { parseEmployeeCodes } from '../../domain/colleagues';
 import { hasAnySuggestion } from '../../domain/receiptOcr';
 import { normalizeLine, validateLine } from '../../domain/validation';
 import type { LocationPolicyLimit, TravelClaimGateway } from '../../services/ports';
 import { useReceipts } from './useReceipts';
+import { AlongWithPicker } from './AlongWithPicker';
 import { useUploader } from '../shared/useUploader';
 import type { ClaimLine, ExpenseClaim, FieldKey, LineFields, Receipt } from '../../types/domain';
 import { date, money, num, plural, today } from '../../utils/format';
@@ -77,12 +79,16 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
   }, [presetDone, receiptsLoading, presetReceiptIds, byId, claim.expenseType]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [summary, setSummary] = useState<string[]>([]);
+  const validationAttempted = useRef(false);
+  const [errorFocus, setErrorFocus] = useState<{ key: string; request: number } | null>(null);
+  const errorFocusRequest = useRef(0);
   const [picker, setPicker] = useState(false);
   type OcrNote = { status: 'reading' } | { status: 'done'; filled: string[] } | { status: 'none' } | { status: 'failed'; message: string };
   const [ocrNote, setOcrNote] = useState<OcrNote | null>(null);
   const draftRef = useRef<ClaimLine | null>(null);
   const ocrAmount = useRef<number | null>(null);
   const ocrBill = useRef<string | null>(null);
+  const ocrGeneration = useRef(0);
   const seen = useRef<ReceiptSuggestion[]>([]); // every bill read on this line, re-applied if the expense item changes
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
@@ -93,8 +99,10 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
   const billAvailable = idef?.fields.includes('isBillAvailable')
     ? normalizeBillAvailability(view.isBillAvailable)
     : undefined;
+  const alongWithCodes = parseEmployeeCodes(String(view.alongWith ?? ''));
+  const alongWithKey = JSON.stringify(alongWithCodes);
   const locationPolicyKey = idef && (stayLocation || billAvailable)
-    ? `${idef.key}:${stayLocation}:${billAvailable ?? ''}`
+    ? `${idef.key}:${stayLocation}:${billAvailable ?? ''}:${alongWithKey}`
     : '';
   const [locationPolicy, setLocationPolicy] = useState<{
     key: string;
@@ -107,15 +115,15 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
       return;
     }
     let cancelled = false;
-    const key = `${idef.key}:${stayLocation}:${billAvailable ?? ''}`;
+    const key = `${idef.key}:${stayLocation}:${billAvailable ?? ''}:${alongWithKey}`;
     setLocationPolicy({ key, status: 'loading', result: null });
-    void gateway.getLocationPolicyLimit(idef.key, stayLocation, billAvailable).then((result) => {
+    void gateway.getLocationPolicyLimit(idef.key, stayLocation, billAvailable, alongWithCodes).then((result) => {
       if (!cancelled) setLocationPolicy({ key, status: 'loaded', result });
     }).catch(() => {
       if (!cancelled) setLocationPolicy({ key, status: 'error', result: null });
     });
     return () => { cancelled = true; };
-  }, [gateway, idef?.key, stayLocation, billAvailable]);
+  }, [gateway, idef?.key, stayLocation, billAvailable, alongWithKey]);
   const currentLocationPolicy = locationPolicy?.key === locationPolicyKey ? locationPolicy : null;
   const usesDynamicPolicy = !!locationPolicyKey;
   const limitDef = usesDynamicPolicy
@@ -130,7 +138,75 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
     : idef;
   const wide = idef ? orphanFields(idef.fields) : new Set<FieldKey>();
   const billUnavailable = billAvailable === 'No';
-  const set = (k: FieldKey, v: string | number): void => { setDraft((d) => ({ ...d, fields: { ...d.fields, [k]: v } })); };
+  const validationFor = (line: ClaimLine): ReturnType<typeof validateLine> => {
+    const item = itemByKey(claim.expenseType, line.itemKey);
+    const fields = line.fields;
+    const location = item?.fields.includes('stayLocation') ? String(fields.stayLocation ?? '').trim() : '';
+    const availability = item?.fields.includes('isBillAvailable') ? normalizeBillAvailability(fields.isBillAvailable) : undefined;
+    const codes = parseEmployeeCodes(String(fields.alongWith ?? ''));
+    const key = item && (location || availability) ? `${item.key}:${location}:${availability ?? ''}:${JSON.stringify(codes)}` : '';
+    const policy = key ? (locationPolicy?.key === key ? locationPolicy : null) : null;
+    const resolvedItem = item && key && policy?.status === 'loaded'
+      ? {
+          ...item,
+          limit: policy.result?.limit ?? null,
+          limitPer: policy.result?.limitPer ?? item.limitPer,
+          enforceEligibility: policy.result?.enforceEligibility ?? item.enforceEligibility,
+        }
+      : item;
+    const result = validateLine(line, claim.expenseType, {
+      eligibilityLimit: lineLimitAmount(resolvedItem, fields),
+      enforceEligibility: resolvedItem?.enforceEligibility,
+    });
+    if (!key || policy?.status === 'loaded') return result;
+
+    const message = policy?.status === 'error'
+      ? 'Could not verify eligibility. Try changing the location or bill availability and wait for the policy to load.'
+      : 'Wait for the eligibility limit to load.';
+    const nextErrors: Record<string, string> = { ...result.errors, amount: message };
+    const labels: Record<string, string> = { itemKey: 'Expense Item', attachment: 'Bills' };
+    for (const fieldKey of Object.keys(nextErrors)) {
+      labels[fieldKey] ??= FIELD_DEFS[fieldKey as FieldKey]?.label ?? fieldKey;
+    }
+    return {
+      ...result,
+      errors: nextErrors,
+      summary: Object.keys(nextErrors).map((fieldKey) =>
+        `${labels[fieldKey]}: ${fieldKey === 'itemKey' ? 'choose an item' : nextErrors[fieldKey]}`,
+      ),
+      ok: false,
+    };
+  };
+  const applyValidation = (line: ClaimLine): void => {
+    const result = validationFor(line);
+    setErrors(result.errors);
+    setSummary(result.summary);
+  };
+  const updateDraft = (update: (current: ClaimLine) => ClaimLine): void => {
+    const next = update(draftRef.current ?? draft);
+    draftRef.current = next;
+    setDraft(next);
+    if (validationAttempted.current) applyValidation(next);
+  };
+  const set = (k: FieldKey, v: string | number): void => {
+    updateDraft((current) => ({ ...current, fields: { ...current.fields, [k]: v } }));
+  };
+
+  useEffect(() => {
+    if (!errorFocus) return;
+    const selector = errorFocus.key === 'attachment' ? '[data-testid="line-file"]' : `[data-testid="line-${errorFocus.key}"]`;
+    const target = document.querySelector<HTMLElement>(`[data-testid="line-modal"] ${selector}`);
+    const scrollTarget = errorFocus.key === 'attachment' ? target?.closest<HTMLElement>('.tc-field') : target;
+    if (!target || !scrollTarget) return;
+    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const focusTarget = errorFocus.key === 'attachment'
+      ? scrollTarget.querySelector<HTMLElement>('.tc-dropzone')
+      : target;
+    focusTarget?.focus({ preventScroll: true });
+  }, [errorFocus?.key, errorFocus?.request]);
+  useEffect(() => {
+    if (validationAttempted.current) applyValidation(draftRef.current ?? draft);
+  }, [locationPolicyKey, currentLocationPolicy?.status, currentLocationPolicy?.result]);
 
   const pickable = pickableForLine(receipts, claim.items, draft, claim.id);
 
@@ -155,21 +231,24 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
     return { fields: out, filled };
   };
   const readUploaded = async (files: File[]): Promise<void> => {
+    const generation = ocrGeneration.current;
     if (!reader.enabled) return;
     for (const f of files) {
       setOcrNote({ status: 'reading' });
       const { suggestion, error: err } = await reader.read(f);
+      if (generation !== ocrGeneration.current) return;
       if (err) { setOcrNote({ status: 'failed', message: err }); continue; }
       if (!suggestion || !hasAnySuggestion(suggestion)) { setOcrNote({ status: 'none' }); continue; }
       seen.current.push(suggestion);
       const cur = draftRef.current;
       if (!cur || !cur.itemKey) continue;
       const r = applyOcr(cur.fields, cur.itemKey, suggestion);
-      if (r.filled.length) { draftRef.current = { ...cur, fields: r.fields }; setDraft(draftRef.current); setOcrNote({ status: 'done', filled: r.filled }); } else setOcrNote({ status: 'none' });
+      if (r.filled.length) { updateDraft((current) => ({ ...current, fields: r.fields })); setOcrNote({ status: 'done', filled: r.filled }); } else setOcrNote({ status: 'none' });
     }
   };
 
   const focusAfterPick = useRef(false);
+  const focusNextItem = useRef(false);
   // As in the prototype: after choosing an item, focus moves to its first editable field.
   useEffect(() => {
     if (!focusAfterPick.current) return;
@@ -177,23 +256,28 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
     document.querySelector<HTMLElement>('[data-testid="line-modal"] .tc-form-grid input:not([readonly]):not([type=file]):not([type=checkbox]), [data-testid="line-modal"] .tc-form-grid select, [data-testid="line-modal"] .tc-form-grid textarea')?.focus();
   }, [draft.itemKey]);
 
+  useEffect(() => {
+    if (!focusNextItem.current) return;
+    focusNextItem.current = false;
+    document.querySelector<HTMLElement>('[data-testid="line-item"]')?.focus();
+  }, [draft.id]);
+
   const pickItem = (key: string): void => {
     focusAfterPick.current = !!key;
     const nd = itemByKey(claim.expenseType, key);
-    setDraft((d) => {
+    updateDraft((d) => {
       let fields: LineFields = nd ? withBillAvailabilityDefault(nd, prefillFromReceipts(nd, {}, receiptsOn(d))) : {};
       ocrAmount.current = null; ocrBill.current = null;
       for (const sug of seen.current) fields = applyOcr(fields, key, sug).fields; // bills already read on this line fill the new item's blank fields
       return { ...d, itemKey: key, fields };
     });
-    setErrors({}); setSummary([]);
+    if (!validationAttempted.current) { setErrors({}); setSummary([]); }
   };
 
   const addFiles = async (files: File[]): Promise<void> => {
     const { metas, accepted } = await uploader.upload(files, { kind: 'claim', recordId: claim.id, lineId: draft.id });
     if (!metas.length) return;
-    setDraft((d) => ({ ...d, attachments: [...d.attachments, ...metas] }));
-    setErrors((e) => { const n = { ...e }; delete n.attachment; return n; });
+    updateDraft((d) => ({ ...d, attachments: [...d.attachments, ...metas] }));
     void readUploaded(accepted); // bills are read from the local files; the stored copies are what gets saved
   };
 
@@ -201,31 +285,46 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
     const ids = Object.keys(checked).filter((k) => checked[k]);
     if (!ids.length) { toast('Select at least one bill', 'warning'); return; }
     const picked = ids.map((id) => byId.get(id)).filter((r): r is Receipt => !!r);
-    setDraft((d) => {
+    updateDraft((d) => {
       const attachments = [...d.attachments, ...picked.map(attachmentFromReceipt)];
       const fields = idef ? prefillFromReceipts(idef, d.fields, [...receiptsOn(d), ...picked]) : d.fields;
       return { ...d, attachments, fields };
     });
     setPicker(false); setChecked({});
-    setErrors((e) => { const n = { ...e }; delete n.attachment; return n; });
     toast(`${plural(ids.length, 'bill')} attached from your receipt box`, 'info');
   };
 
-  const save = (): void => {
-    if (usesDynamicPolicy && currentLocationPolicy?.status !== 'loaded') {
-      const message = currentLocationPolicy?.status === 'error'
-        ? 'Could not verify eligibility. Try changing the location or bill availability and wait for the policy to load.'
-        : 'Wait for the eligibility limit to load.';
-      setErrors({ amount: message });
-      setSummary([`Amount: ${message}`]);
+  const save = (addNext = false): void => {
+    validationAttempted.current = true;
+    const r = validationFor(draft);
+    setErrors(r.errors);
+    setSummary(r.summary);
+    if (!r.ok || !idef) {
+      const firstError = Object.keys(r.errors)[0];
+      if (firstError) setErrorFocus({ key: firstError, request: ++errorFocusRequest.current });
       return;
     }
-    const r = validateLine(draft, claim.expenseType, {
-      eligibilityLimit: lineLimitAmount(limitDef, view),
-      enforceEligibility: limitDef?.enforceEligibility,
-    });
-    if (!r.ok || !idef) { setErrors(r.errors); setSummary(r.summary); return; }
-    onSave(normalizeLine({ ...draft, fields: r.fields }, idef));
+    const saved = normalizeLine({ ...draft, fields: r.fields }, idef);
+    onSave(saved);
+    if (addNext && !existing) {
+      const next: ClaimLine = { id: newId(), itemKey: '', fields: {}, attachments: [], approvedAmount: null, approverRemarks: '' };
+      draftRef.current = next;
+      setDraft(next);
+      setErrors({});
+      setSummary([]);
+      validationAttempted.current = false;
+      setErrorFocus(null);
+      setPicker(false);
+      setChecked({});
+      setOcrNote(null);
+      ocrGeneration.current++;
+      seen.current = [];
+      ocrAmount.current = null;
+      ocrBill.current = null;
+      focusNextItem.current = true;
+      toast(`${idef.label} added · ${money(r.fields.amount)}. Add the next expense.`, 'success');
+      return;
+    }
     close();
     toast(existing ? 'Expense line updated' : `${idef.label} added · ${money(r.fields.amount)}`);
   };
@@ -276,14 +375,17 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
           {...(!errors.qty && overQ ? { helper: `Exceeds the ${idef.limitQty} litre cap by ${overQ} litres.`, helperTone: 'warning' as const } : {})} />;
       }
       case 'totalKm':
-        return <Field key={key} {...common} type="number" value={val} readonly required={false} helper="To KM minus From KM" tabIndex={-1} />;
+        return <Field key={key} {...common} type="number" value={val} readonly required={false} helper="Trip KM minus non-accountable KM" tabIndex={-1} />;
+      case 'alongWith':
+        return <AlongWithPicker key={key} value={String(val)} gateway={gateway} onChange={(value) => set(key, value)}
+          label={fd.label} placeholder={fd.placeholder} helper={fd.helper} error={errors[key]} full={span} testId={`line-${key}`} />;
       case 'attachment':
         return (
           <div key={key} className="tc-span-all">
             <FileField label="Bills" multiple files={draft.attachments} required={!idef.attachmentOptional && !billUnavailable} optional={!!idef.attachmentOptional || billUnavailable} disabled={billUnavailable}
               helper={billUnavailable ? 'Bill controls are disabled while Is Bill Available is No.' : 'Attach one or more bills for this line · PDF, JPG or PNG up to 5 MB each'} error={errors.attachment} full testId="line-file"
               placeholder={draft.attachments.length ? 'Add more bills' : 'Upload PDF, JPG or PNG'} onAdd={addFiles}
-              onRemove={(i) => setDraft((d) => ({ ...d, attachments: d.attachments.filter((_, j) => j !== i) }))} />
+              onRemove={(i) => updateDraft((d) => ({ ...d, attachments: d.attachments.filter((_, j) => j !== i) }))} />
             {ocrNote ? (
               <p className={'tc-helper' + (ocrNote.status === 'failed' ? ' tc-helper--warning' : '')} role="status" data-testid="line-ocr">
                 {ocrNote.status === 'reading' ? 'Reading the bill…' : ocrNote.status === 'done' ? `Read from your bill: ${ocrNote.filled.join(', ')}. Please check ${ocrNote.filled.length === 1 && !ocrNote.filled[0]?.includes('(') ? 'it' : 'them'}.` : ocrNote.status === 'none' ? 'Could not find details on this bill. Please fill them in.' : `${ocrNote.message} Please fill the details in.`}
@@ -338,7 +440,9 @@ export function LineModal({ claim, existing, gateway, isAdmin, eligibleAmount, p
   if (!def) return null;
   return (
     <ModalFrame title={existing ? 'Edit Expense' : 'Add Expense'} size="drawer" testId="line-modal"
-      footer={<><Button label="Cancel" onClick={close} /><Button variant="primary" label={uploader.uploading ? 'Uploading…' : existing ? 'Save Changes' : 'Add Expense'} disabled={uploader.uploading} onClick={save} data-testid="line-save" /></>}>
+      footer={<><Button label="Cancel" onClick={close} /><Button variant="primary" label={uploader.uploading ? 'Uploading…' : existing ? 'Save Changes' : 'Add Expense'} disabled={uploader.uploading} onClick={() => save()} data-testid="line-save" />
+        {!existing ? <Button variant="primary" label="Add & Next" disabled={uploader.uploading} onClick={() => save(true)} data-testid="line-add-next" /> : null}
+      </>}>
       <div className="tc-stack tc-stack--16">
         {summary.length ? <Alert tone="error" title="Please complete the highlighted fields"><ul>{summary.map((s) => <li key={s}>{s}</li>)}</ul></Alert> : null}
         <Field label="Expense Item" type="select" required value={draft.itemKey} placeholder="Select an expense item" testId="line-item"

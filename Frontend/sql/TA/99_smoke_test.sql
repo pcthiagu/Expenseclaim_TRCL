@@ -117,7 +117,7 @@ EXEC dbo.TA_zz_Expect N'TA_usp_SaveRequestDraft', @in, N'[CONFLICT]', N'Only dra
 SET @in = @e + @claimHead + N'"employeeCode":"T9001","requestDate":"' + @today + N'","expenseType":"fuel","purpose":"Site visits","items":[{"id":"f1","itemKey":"l_fuel_4w","fields":{"date":"' + @today
         + N'","fromLocation":"A","toLocation":"B","fromKm":100,"toKm":142,"nonAccountableKm":2,"amount":99999,"totalKm":1},"attachments":[]}]}}';
 EXEC dbo.TA_zz_Call N'TA_usp_SaveRequestDraft', @in, @r OUTPUT;
-IF JSON_VALUE(@r, '$.items[0].fields.totalKm') <> N'42' OR CAST(JSON_VALUE(@r, '$.items[0].fields.amount') AS DECIMAL(18,2)) <> 360 THROW 51000, N'FAIL 5: fuel amount must be (42 - 2) km x 9 = 360', 1;
+IF JSON_VALUE(@r, '$.items[0].fields.totalKm') <> N'40' OR CAST(JSON_VALUE(@r, '$.items[0].fields.amount') AS DECIMAL(18,2)) <> 360 THROW 51000, N'FAIL 5: claimable distance and amount must use (42 - 2) km x 9 = 360', 1;
 
 /* 6. approvals: approvers only; every line needs an approved amount within the claimed amount */
 SET @in = @e + N',"Kind":"claim","Id":"' + @id + N'"}';

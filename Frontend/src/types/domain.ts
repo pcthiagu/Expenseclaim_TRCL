@@ -19,7 +19,10 @@ export type FieldKey =
   | 'modeOfTravel' | 'stayLocation' | 'fromLocation' | 'toLocation'
   | 'billerName' | 'billNumber' | 'isBillAvailable'
   | 'fromKm' | 'toKm' | 'totalKm' | 'nonAccountableKm' | 'qty'
-  | 'amount' | 'limit' | 'remarks' | 'alongWith' | 'attachment';
+  | 'amount' | 'limit' | 'remarks' | 'alongWith'
+  | 'gstNumber' | 'state' | 'igst' | 'cgst' | 'sgst' | 'attachment';
+export type GstFieldKey = 'gstNumber' | 'state' | 'igst' | 'cgst' | 'sgst';
+export type GstFields = Partial<Record<GstFieldKey, string>>;
 
 export type FieldType = 'date' | 'time' | 'select' | 'text' | 'number' | 'money' | 'textarea' | 'file';
 /** Which option list a select shows: a TA_Lookup.ListKey (MODES, CITIES, ...) delivered by the database. */
@@ -235,7 +238,7 @@ export interface ReferenceFieldRow {
 export interface ReferenceData {
   fields: ReferenceFieldRow[];
   types: ExpenseTypeDef[];
-  /** MODES, CITIES, TRAVEL_PURPOSE, ESTIMATE_ITEM, COST_CENTRE, ... */
+  /** MODES, CITIES, GST_STATES, TRAVEL_PURPOSE, ESTIMATE_ITEM, COST_CENTRE, ... */
   lookups: Record<string, string[]>;
 }
 

@@ -66,15 +66,15 @@ export const fuelRate = (def: ExpenseItemDef | null | undefined, policy: PolicyC
   def?.rate ? policy.rates[def.rate] : 0;
 
 /**
- * Fuel by kilometres: totalKm = max(0, toKm - fromKm); claimable = max(0, totalKm - nonAccountableKm);
- * amount = round2(claimable * rate). Returns a NEW fields object (the prototype mutated in place).
+ * Fuel by kilometres: totalKm is claimable distance after deducting non-accountable km;
+ * amount = round2(totalKm * rate). Returns a NEW fields object (the prototype mutated in place).
  * Items that are not 'fuelKm' are returned unchanged.
  */
 export function applyFuel(def: ExpenseItemDef | null | undefined, fields: LineFields, policy: PolicyConfig = DEFAULT_POLICY): LineFields {
   if (!def || def.compute !== 'fuelKm') return fields;
-  const total = Math.max(0, num(fields.toKm) - num(fields.fromKm));
-  const claimable = Math.max(0, total - num(fields.nonAccountableKm));
-  return { ...fields, totalKm: total, amount: roundMoney(claimable * fuelRate(def, policy)) };
+  const tripKm = Math.max(0, num(fields.toKm) - num(fields.fromKm));
+  const claimableKm = Math.max(0, tripKm - num(fields.nonAccountableKm));
+  return { ...fields, totalKm: claimableKm, amount: roundMoney(claimableKm * fuelRate(def, policy)) };
 }
 
 /**
@@ -135,6 +135,13 @@ export function recordApproved(r: TravelClaimRecord): number | null {
 /** Sum of per-line approved amounts as entered by the approver (null/'' count as 0). */
 export const approvedTotal = (c: Pick<ExpenseClaim, 'items'>): number =>
   (c.items ?? []).reduce((s, it) => s + num(it.approvedAmount), 0);
+
+/** Supplies the claimed amount as the initial approval value without replacing an approver's existing decision. */
+export function withDefaultApprovedAmounts(lines: readonly ClaimLine[]): ClaimLine[] {
+  return lines.map((it) => it.approvedAmount == null
+    ? { ...it, approvedAmount: itemAmount(it) }
+    : it);
+}
 
 /**
  * "Fill within policy limits" (approver): for every line without an approved amount, approve

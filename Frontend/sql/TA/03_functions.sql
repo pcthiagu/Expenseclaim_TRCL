@@ -201,8 +201,8 @@ BEGIN
 END
 GO
 
--- Stamp: this script is installed at revision 2026-10-28-b (the app compares it with the revision it expects).
-MERGE dbo.TA_SchemaVersion AS t USING (VALUES (N'03_functions', N'2026-10-28-b')) AS s (ScriptName, Rev) ON t.ScriptName = s.ScriptName
+-- Stamp: this script is installed at revision 2026-11-12-a (the app compares it with the revision it expects).
+MERGE dbo.TA_SchemaVersion AS t USING (VALUES (N'03_functions', N'2026-11-12-a')) AS s (ScriptName, Rev) ON t.ScriptName = s.ScriptName
 WHEN MATCHED THEN UPDATE SET Rev = s.Rev, AppliedAt = SYSDATETIME()
 WHEN NOT MATCHED THEN INSERT (ScriptName, Rev) VALUES (s.ScriptName, s.Rev);
 GO

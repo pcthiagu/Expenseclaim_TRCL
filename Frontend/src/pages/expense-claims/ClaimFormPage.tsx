@@ -6,12 +6,12 @@ import { TrailButton } from '../shared/ApprovalTrail';
 import { useActionBarHeight, useToast } from '../../components/common/Toast';
 import { Field, ReadonlyField } from '../../components/forms/Field';
 import { useModal } from '../../components/modals/ModalHost';
-import { approvedTotal, autofillApproved, claimTotal, lineLimitAmount, medicalUsage, overLimit } from '../../domain/calc';
-import { EXPENSE_TYPES, fixedItems, itemByKey, lookup, typeByKey } from '../../domain/expenseSchema';
+import { approvedTotal, autofillApproved, claimTotal, lineLimitAmount, medicalUsage, overLimit, withDefaultApprovedAmounts } from '../../domain/calc';
+import { EXPENSE_TYPES, fixedItems, GST_FIELD_KEYS, itemByKey, lookup, typeByKey } from '../../domain/expenseSchema';
 import { validateApproval, validateClaimHeader, validateRejectionReason } from '../../domain/validation';
 import { canApprove, canCopy, canDelete, canEdit } from '../../domain/workflow';
 import { ApiError } from '../../services/apiClient';
-import type { ClaimLine, Employee, ExpenseClaim, Receipt, TravelClaimRecord } from '../../types/domain';
+import type { ClaimLine, Employee, ExpenseClaim, GstFieldKey, GstFields, Receipt, TravelClaimRecord } from '../../types/domain';
 import { date, dateTime, money, money0, plural, today } from '../../utils/format';
 import { ClaimItems } from './ClaimItems';
 import { DateWiseDrawer } from './DateWiseDrawer';
@@ -28,6 +28,14 @@ import { readAppConfig } from '../../config/appConfig';
 
 const uid = (): string => (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8));
 const clone = <T,>(x: T): T => JSON.parse(JSON.stringify(x)) as T;
+const gstFieldsFor = (claim: ExpenseClaim, line: ClaimLine): GstFields | undefined => {
+  const item = itemByKey(claim.expenseType, line.itemKey);
+  const fields: GstFields = {};
+  for (const key of GST_FIELD_KEYS) {
+    if (item?.fields.includes(key)) fields[key] = String(line.fields[key] ?? '');
+  }
+  return Object.keys(fields).length ? fields : undefined;
+};
 
 type Load = 'loading' | 'ready' | 'notfound' | 'error';
 
@@ -254,7 +262,8 @@ const previewPdf = async (): Promise<void> => {
 
   const def = typeByKey(form.expenseType) ?? EXPENSE_TYPES[0]!;
   const total = claimTotal(form);
-  const apprTotal = approvedTotal(form);
+  const approvalItems = approving && form.status === 'submitted' ? withDefaultApprovedAmounts(form.items) : form.items;
+  const apprTotal = approvedTotal({ items: approvalItems });
   const over = form.items.filter((it) => overLimit(itemByKey(form.expenseType, it.itemKey), it.fields) > 0).length;
   const showApproval = approving || form.status === 'approved' || form.status === 'rejected';
   const isNew = !id;
@@ -306,13 +315,19 @@ const previewPdf = async (): Promise<void> => {
 
   const approve = (): Promise<void> => guarded(async () => {
     setSummary([]); setErrors({});
-    const c = validateApproval(form.items);
+    const c = validateApproval(approvalItems);
     setLineErrors(c.lineErrors);
     if (!c.ok) { setSummary(c.summary); return; }
     const ok = await modal.confirm({ title: 'Approve this claim?', body: `${money(apprTotal)} of ${money(total)} claimed will be approved for ${form.employeeName}.`, confirmLabel: `Approve ${money0(apprTotal)}` });
     if (!ok) return;
     const r = await gateway.approve('claim', form.id, {
-      lines: form.items.map((it) => ({ id: it.id, approvedAmount: it.approvedAmount, approverRemarks: it.approverRemarks })), approverComments: form.approverComments,
+      lines: approvalItems.map((it) => {
+        const gstFields = gstFieldsFor(form, it);
+        return {
+          id: it.id, approvedAmount: it.approvedAmount, approverRemarks: it.approverRemarks,
+          ...(gstFields ? { gstFields } : {}),
+        };
+      }), approverComments: form.approverComments,
     });
     if (r.kind === 'claim') setForm(clone(r));
     setDirty(false);
@@ -327,7 +342,13 @@ const previewPdf = async (): Promise<void> => {
     const ok = await modal.confirm({ title: 'Reject this claim?', body: 'The employee will see your reason and can copy the claim into a new draft.', confirmLabel: 'Reject claim', variant: 'destructive' });
     if (!ok) return;
     const r = await gateway.reject('claim', form.id, {
-      lines: form.items.filter((it) => it.approvedAmount !== null).map((it) => ({ id: it.id, approvedAmount: it.approvedAmount, approverRemarks: it.approverRemarks })),
+      lines: form.items.map((it) => {
+        const gstFields = gstFieldsFor(form, it);
+        return {
+          id: it.id, approvedAmount: it.approvedAmount, approverRemarks: it.approverRemarks,
+          ...(gstFields ? { gstFields } : {}),
+        };
+      }),
       approverComments: form.approverComments, rejectionReason: form.rejectionReason,
     });
     if (r.kind === 'claim') setForm(clone(r));
@@ -511,10 +532,13 @@ const previewPdf = async (): Promise<void> => {
           })() : null}
           {eligibilityWarningError ? <Alert tone="warning" title="Eligibility could not be checked">{eligibilityWarningError}</Alert> : null}
           {form.items.length
-            ? <ClaimItems items={form.items} expenseType={form.expenseType} editable={editable} approving={approving} showApproval={showApproval} lineErrors={lineErrors} total={total} approvedTotal={apprTotal}
+            ? <ClaimItems items={approvalItems} expenseType={form.expenseType} editable={editable} approving={approving} showApproval={showApproval} lineErrors={lineErrors} total={total} approvedTotal={apprTotal}
                 eligibilityByLine={eligibilityByLine}
                 onEdit={(lid) => { const it = form.items.find((x) => x.id === lid); if (it) openLine(it); }} onRemove={removeLine}
-                onApproval={(lid, patch) => update({ items: form.items.map((x) => (x.id === lid ? { ...x, ...patch } : x)) })} />
+                onApproval={(lid, patch) => update({ items: form.items.map((x) => (x.id === lid ? { ...x, ...patch } : x)) })}
+                onGstChange={(lid, key: GstFieldKey, value) => update({ items: form.items.map((x) =>
+                  x.id === lid ? { ...x, fields: { ...x.fields, [key]: value } } : x,
+                ) })} />
             : <EmptyState icon="receipt" title={editable ? 'Add your first expense line' : 'No expense lines'} body={editable ? 'Each line is one bill or trip leg. You can edit or remove lines until you submit.' : 'This claim has no lines.'}
                 action={editable ? <div className="tc-row tc-row--center">{gridBtn ? <Button icon="calendar" label="Date-wise entry" onClick={openGrid} /> : null}<Button icon="plus" label="Add Expense" onClick={() => openLine(null)} /></div> : undefined} />}
         </section>

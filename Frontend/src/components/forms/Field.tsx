@@ -149,6 +149,7 @@ export function FileField(p: {
   helper?: string; error?: string; placeholder?: string; full?: boolean; onAdd: (files: File[]) => void; onRemove: (i: number) => void; testId?: string;
 }) {
   const id = 'u' + useId().replace(/:/g, '');
+  const msgId = id + '-msg';
   const showZone = !p.readonly && !p.disabled && (p.multiple || !p.files.length);
   return (
     <div className={'tc-field' + (p.error ? ' tc-field--error' : '') + (p.full ? ' tc-span-all' : '')}>
@@ -163,16 +164,18 @@ export function FileField(p: {
           <div className="tc-file__chips">{p.files.map((a, i) => <FileChip key={a.name + i} att={a} onRemove={p.readonly || p.disabled ? undefined : () => p.onRemove(i)} />)}</div>
         ) : null}
         {showZone ? (
-          <label className="tc-dropzone" htmlFor={id}>
+          <label className="tc-dropzone" htmlFor={id} tabIndex={p.error ? 0 : undefined} aria-invalid={p.error ? true : undefined}
+            aria-describedby={p.error ? msgId : undefined}>
             <Icon name="upload" /><span>{p.placeholder ?? 'Upload PDF, JPG or PNG'}</span>
-            <input type="file" className="tc-visually-hidden" id={id} data-testid={p.testId} multiple={p.multiple}
+            <input type="file" className="tc-visually-hidden" id={id} data-testid={p.testId} multiple={p.multiple} aria-invalid={p.error ? true : undefined}
+              aria-describedby={p.error ? msgId : undefined}
               accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
               onChange={(e) => { const fl = Array.from<File>(e.target.files ?? []); e.target.value = ''; if (fl.length) p.onAdd(fl); }} />
           </label>
         ) : null}
         {p.readonly && !p.files.length ? <span className="tc-text-secondary">No document attached</span> : null}
       </div>
-      {p.error ? <p className="tc-error"><Icon name="alert" /><span>{p.error}</span></p> : p.helper ? <p className="tc-helper">{p.helper}</p> : null}
+      {p.error ? <p className="tc-error" id={msgId}><Icon name="alert" /><span>{p.error}</span></p> : p.helper ? <p className="tc-helper">{p.helper}</p> : null}
     </div>
   );
 }

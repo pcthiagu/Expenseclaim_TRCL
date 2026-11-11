@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ServerEngine } from './helpers/engine/serverEngine.ts';
-import { loadReferenceSchema } from './helpers/referenceData.ts';
+import { buildReferenceData, loadReferenceSchema } from './helpers/referenceData.ts';
+import { GST_FIELD_KEYS, setReferenceData } from '../src/domain/expenseSchema.ts';
 import { ApiError } from '../src/services/apiClient.ts';
 import { claimTotal } from '../src/domain/calc.ts';
 import type { AdvanceRequest, ExpenseClaim, TravelClaimRecord, TravelRequest } from '../src/types/domain.ts';
@@ -109,8 +110,44 @@ test('draft save ignores client-supplied status, approver and approved amounts',
 test('fuel-by-km amount is recomputed server-side (client amount ignored)', async () => {
   const g = mk('employee');
   const s = await g.saveDraft(newClaim({ id: 'c-f', expenseType: 'fuel', items: [line('f1', 'l_fuel_4w', { date: '2026-10-01', fromLocation: 'A', toLocation: 'B', fromKm: 100, toKm: 142, nonAccountableKm: 2, amount: 999999, totalKm: 1 })] })) as ExpenseClaim;
-  assert.equal(s.items[0]!.fields.totalKm, 42);
+  assert.equal(s.items[0]!.fields.totalKm, 40);
   assert.equal(s.items[0]!.fields.amount, 360);
+});
+
+test('approvers can correct only configured GST fields when approving a claim', async () => {
+  const ref = buildReferenceData();
+  const gstRef = {
+    ...ref,
+    types: ref.types.map((type) => ({
+      ...type,
+      items: type.items.map((item) => item.key === 'l_da'
+        ? { ...item, fields: [...item.fields, ...GST_FIELD_KEYS] }
+        : item),
+    })),
+  };
+  setReferenceData(gstRef);
+  try {
+    const employee = mk('employee');
+    const saved = await employee.saveDraft(newClaim({
+      items: [line('gst-line', 'l_da', {
+        date: '2026-10-01', amount: 100, gstNumber: 'OLDGST', state: 'Tamil Nadu', igst: '1', cgst: '0', sgst: '0',
+      })],
+    })) as ExpenseClaim;
+    await employee.submit('claim', saved.id);
+    employee.setSession('admin');
+    const approved = await employee.approve('claim', saved.id, {
+      lines: [{
+        id: 'gst-line', approvedAmount: 100, approverRemarks: '',
+        gstFields: { gstNumber: 'CORRECTEDGST', state: 'Karnataka', igst: '2', cgst: '', sgst: '1' },
+      }],
+    }) as ExpenseClaim;
+    assert.deepEqual(
+      GST_FIELD_KEYS.map((key) => approved.items[0]!.fields[key]),
+      ['CORRECTEDGST', 'Karnataka', '2', '', '1'],
+    );
+  } finally {
+    loadReferenceSchema();
+  }
 });
 
 test('only drafts are editable/deletable, only by their owner', async () => {
